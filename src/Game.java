@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class Game {
 
-	static final String VERSION = "a0.19r1";
+	static final String VERSION = "a12.20r2";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static final int WIDTH = 640, HEIGHT = 480;
 	static JPanel gamePanel;
