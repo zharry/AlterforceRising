@@ -11,7 +11,9 @@ public class Game {
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static final int WIDTH = 640, HEIGHT = 480;
 	static JPanel gamePanel;
-
+	
+	static int temp = 1;
+	
 	static boolean running;
 
 	public static void main(String[] args) {
@@ -45,9 +47,12 @@ public class Game {
 	}
 	
 	static void tick() {
+		temp++;
 	}
 	
 	static void render(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(temp, 25, 125, 125);
 	}
 	
 	static void createWindow() {
