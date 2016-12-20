@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,7 +9,7 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.20r3";
+	static final String VERSION = "a12.20r4";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static final int WIDTH = 640, HEIGHT = 480;
 
@@ -16,6 +17,7 @@ public class Game {
 	static JPanel gamePanel;
 	static Handler gameController;
 	static boolean running;
+	static Random random = new Random();
 
 	// Game Constants
 	public static final int TYPE_PLAYER = 386721;
@@ -27,11 +29,6 @@ public class Game {
 		gameController = new Handler();
 		running = true;
 		createWindow();
-
-		// Add Game Objects
-		for (int i = 0; i < 15555; i++)
-			gameController.add(new Player((int) (Math.random() * WIDTH), (int) (Math.random() * HEIGHT), TYPE_PLAYER,
-					new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255))));
 
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
@@ -58,6 +55,7 @@ public class Game {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	static void createWindow() {
 		JFrame frame = new JFrame(TITLE);
 		frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
