@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Player extends GameObject {
@@ -14,6 +15,8 @@ public class Player extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(this.x, this.y, 32, 32);
 	}
 
 }
