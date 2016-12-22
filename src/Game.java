@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -85,7 +87,44 @@ public class Game {
 		};		
 		
 		// Player Controls
+		frame.addMouseListener(new MouseListener() {
+			@Override 
+			public void mousePressed(MouseEvent mouse){
+				int m = mouse.getButton();
+				int x_coor = mouse.getX();
+				int y_coor = mouse.getY();
+				if (m == MouseEvent.BUTTON3){
+					System.out.println(x_coor + " " + y_coor);
+					player.setX(x_coor);
+					player.setY(y_coor);
+				}
+				System.out.println(x_coor + " " + y_coor);
+			}
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		frame.addKeyListener(new KeyAdapter() {
+			
+			
 			@Override
 			public void keyPressed(KeyEvent key) {
 				int k = key.getKeyCode();
