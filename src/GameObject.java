@@ -55,4 +55,12 @@ public abstract class GameObject {
 		return this.type;
 	}
 
+	public double clamp(double i, double min, double max) {
+		return i < min ? min : i > max ? max : i;
+	}
+
+	public int clamp(int i, int min, int max) {
+		return i < min ? min : i > max ? max : i;
+	}
+
 }
