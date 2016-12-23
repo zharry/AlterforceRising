@@ -1,12 +1,15 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -25,14 +28,21 @@ public class Game {
 	static Player player;
 
 	// Game Constants
+	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
 	static final int TYPE_ENEMY = 396863;
 
-	public static void main(String[] args) {
+	// Game Sprites
+	static Image sprPlayer;
+
+	public static void main(String[] args) throws Exception {
+
+		// Initialize Sprites
+		sprPlayer = ImageIO.read(new File(assetsDir +"Player.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
-		player = new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, TYPE_PLAYER);
+		player = new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, TYPE_PLAYER, sprPlayer);
 		gameController.add(player);
 
 		// Start Game
@@ -58,7 +68,7 @@ public class Game {
 			fps++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				// System.out.println("FPS: " + fps);
+				System.out.println("FPS: " + fps);
 				fps = 0;
 			}
 		}
@@ -116,26 +126,26 @@ public class Game {
 			@Override
 			public void keyPressed(KeyEvent key) {
 				int k = key.getKeyCode();
-				if (k == KeyEvent.VK_W)
+				if (k == KeyEvent.VK_W || k == KeyEvent.VK_UP)
 					player.goUp = true;
-				if (k == KeyEvent.VK_A)
+				if (k == KeyEvent.VK_A || k == KeyEvent.VK_LEFT)
 					player.goLeft = true;
-				if (k == KeyEvent.VK_S)
+				if (k == KeyEvent.VK_S || k == KeyEvent.VK_DOWN)
 					player.goDown = true;
-				if (k == KeyEvent.VK_D)
+				if (k == KeyEvent.VK_D || k == KeyEvent.VK_RIGHT)
 					player.goRight = true;
 			}
 
 			@Override
 			public void keyReleased(KeyEvent key) {
 				int k = key.getKeyCode();
-				if (k == KeyEvent.VK_W)
+				if (k == KeyEvent.VK_W || k == KeyEvent.VK_UP)
 					player.goUp = false;
-				if (k == KeyEvent.VK_A)
+				if (k == KeyEvent.VK_A || k == KeyEvent.VK_LEFT)
 					player.goLeft = false;
-				if (k == KeyEvent.VK_S)
+				if (k == KeyEvent.VK_S || k == KeyEvent.VK_DOWN)
 					player.goDown = false;
-				if (k == KeyEvent.VK_D)
+				if (k == KeyEvent.VK_D || k == KeyEvent.VK_RIGHT)
 					player.goRight = false;
 			}
 		});
