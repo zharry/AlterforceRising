@@ -1,17 +1,21 @@
 import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
 
 	int x, y, velX, velY;
 	int type;
-	Image sprite;
+	double rotateDegs;
+	BufferedImage sprite;
+	double rotateLocX, rotateLocY;
 
-	public GameObject(int x, int y, int type, Image img) {
+	public GameObject(int x, int y, int type, BufferedImage img) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
 		this.sprite = img;
+		this.rotateLocX = img.getWidth(null) / 2;
+		this.rotateLocY = img.getHeight(null) / 2;
 	}
 
 	public abstract void tick();

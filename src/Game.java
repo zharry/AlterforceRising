@@ -1,11 +1,12 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.23r1";
+	static final String VERSION = "a12.23r2";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static final int WIDTH = 640, HEIGHT = 480;
 
@@ -33,12 +34,12 @@ public class Game {
 	static final int TYPE_ENEMY = 396863;
 
 	// Game Sprites
-	static Image sprPlayer;
+	static BufferedImage sprPlayer;
 
 	public static void main(String[] args) throws Exception {
 
 		// Initialize Sprites
-		sprPlayer = ImageIO.read(new File(assetsDir +"Player.png"));
+		sprPlayer = ImageIO.read(new File(assetsDir + "Player.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
@@ -88,7 +89,7 @@ public class Game {
 			@Override
 			public void paint(Graphics g) {
 				// Reset Frame
-				g.setColor(Color.GREEN);
+				g.setColor(Color.lightGray);
 				g.fillRect(0, 0, getWidth(), getHeight());
 				// Render Game
 				gameController.render(g);
@@ -96,13 +97,38 @@ public class Game {
 		};
 
 		// Player Controls
+		frame.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent mouse) {
+				System.out.println("Entered");
+				int p1x = player.getX(), p1y = player.getY();
+				int p2x = mouse.getX(), p2y = mouse.getY();
+				int p3x = player.getX(), p3y = -1;
+
+				double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
+				double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
+				double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
+
+				player.rotateDegs = Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31)));
+
+				System.out.println(player.rotateDegs);
+			}
+
+		});
 		frame.addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent mouse) {
 				int m = mouse.getButton();
-				int x_coor = mouse.getX(), y_coor = mouse.getY();
+				int xCoor = mouse.getX(), yCoor = mouse.getY();
 				if (m == MouseEvent.BUTTON3)
-					player.setTp(x_coor, y_coor);
+					player.setTp(xCoor, yCoor);
 			}
 
 			@Override
@@ -110,7 +136,7 @@ public class Game {
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
+			public void mouseEntered(MouseEvent mouse) {
 			}
 
 			@Override
