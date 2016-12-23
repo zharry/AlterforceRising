@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.22r2";
+	static final String VERSION = "a12.23r1";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static final int WIDTH = 640, HEIGHT = 480;
 
@@ -41,7 +41,7 @@ public class Game {
 
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
-		double numTicks = 144.0, ns = 1000000000 / numTicks, delta = 0;
+		double numTicks = 60.0, ns = 1000000000 / numTicks, delta = 0;
 		int fps = 0;
 		while (running) {
 			long curTime = System.nanoTime();
@@ -90,14 +90,9 @@ public class Game {
 			@Override
 			public void mousePressed(MouseEvent mouse) {
 				int m = mouse.getButton();
-				int x_coor = mouse.getX();
-				int y_coor = mouse.getY();
-				if (m == MouseEvent.BUTTON3) {
-					System.out.println(x_coor + " " + y_coor);
-					player.setX(x_coor);
-					player.setY(y_coor);
-				}
-				System.out.println(x_coor + " " + y_coor);
+				int x_coor = mouse.getX(), y_coor = mouse.getY();
+				if (m == MouseEvent.BUTTON3)
+					player.setTp(x_coor, y_coor);
 			}
 
 			@Override
@@ -106,20 +101,14 @@ public class Game {
 
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 		frame.addKeyListener(new KeyAdapter() {
