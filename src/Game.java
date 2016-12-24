@@ -75,6 +75,8 @@ public class Game {
 		}
 	}
 
+	static int p1x, p1y, p2x,p2y,p3x,p3y;
+	
 	@SuppressWarnings("serial")
 	static void createWindow() {
 		JFrame frame = new JFrame(TITLE);
@@ -91,6 +93,9 @@ public class Game {
 				// Reset Frame
 				g.setColor(Color.lightGray);
 				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(Color.black);
+				g.drawLine(p2x, p2y, p1x, p1y);
+				g.drawLine(p3x, p3y, p1x, p1y);
 				// Render Game
 				gameController.render(g);
 			}
@@ -100,25 +105,25 @@ public class Game {
 		frame.addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
-			public void mouseDragged(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
+			public void mouseDragged(MouseEvent mouse) {
+				mouseMoved(mouse);
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent mouse) {
-				System.out.println("Entered");
-				int p1x = player.getX(), p1y = player.getY();
-				int p2x = mouse.getX(), p2y = mouse.getY();
-				int p3x = player.getX(), p3y = -1;
+				p1x = (int) (player.getX() + player.rotateLocX); p1y = (int) (player.getY() + player.rotateLocY);
+				p2x = mouse.getX(); p2y = mouse.getY() - 26;
+				System.out.println(p2y);
+				p3x = (int) (player.getX() + player.rotateLocX); p3y = -1;
 
 				double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 				double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
 				double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
 
-				player.rotateDegs = Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31)));
+				
+				System.out.println(Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
+				player.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) + Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
 
-				System.out.println(player.rotateDegs);
 			}
 
 		});
