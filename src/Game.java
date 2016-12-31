@@ -17,16 +17,22 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.23r2";
+	static final String VERSION = "a12.30r1";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static final int WIDTH = 640, HEIGHT = 480;
 
+	// Debug Variables
+	static boolean debug = false;
+	static int fps;
+
 	// Game Variables
 	static JPanel gamePanel;
+	static JFrame frame;
 	static Handler gameController;
 	static boolean running;
 	static Random random = new Random();
 	static Player player;
+	static int p1x, p1y, p2x, p2y, p3x, p3y;
 
 	// Game Constants
 	static final String assetsDir = "Assets/";
@@ -53,7 +59,7 @@ public class Game {
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
 		double numTicks = 60.0, ns = 1000000000 / numTicks, delta = 0;
-		int fps = 0;
+		int fpsProc = 0;
 		while (running) {
 			long curTime = System.nanoTime();
 			delta += (curTime - lastTime) / ns;
@@ -66,18 +72,18 @@ public class Game {
 			// Update the Graphics
 			gamePanel.repaint();
 			// Display FPS
-			fps++;
+			fpsProc++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				System.out.println("FPS: " + fps);
-				fps = 0;
+				fps = fpsProc;
+				fpsProc = 0;
 			}
 		}
 	}
 
 	@SuppressWarnings("serial")
 	static void createWindow() {
-		JFrame frame = new JFrame(TITLE);
+		frame = new JFrame(TITLE);
 		frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		frame.setMaximumSize(new Dimension(WIDTH, HEIGHT));
 		frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -94,11 +100,13 @@ public class Game {
 				g.setColor(Color.black);
 				// Render Game
 				gameController.render(g);
+				if (debug)
+					drawDebug(g);
 			}
 		};
 
 		// Player Controls
-		frame.addMouseMotionListener(new MouseMotionListener() {
+		gamePanel.addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
 			public void mouseDragged(MouseEvent mouse) {
@@ -107,9 +115,12 @@ public class Game {
 
 			@Override
 			public void mouseMoved(MouseEvent mouse) {
-				int p1x = (int) (player.getX() + player.rotateLocX), p1y = (int) (player.getY() + player.rotateLocY);
-				int p2x = mouse.getX(), p2y = mouse.getY() - 26;
-				int p3x = (int) (player.getX() + player.rotateLocX), p3y = -1;
+				p1x = (int) (player.getX() + player.rotateLocX);
+				p1y = (int) (player.getY() + player.rotateLocY);
+				p2x = (int) (mouse.getX() + player.rotateLocX);
+				p2y = (int) (mouse.getY() + player.rotateLocY);
+				p3x = (int) (player.getX() + player.rotateLocX);
+				p3y = -1;
 
 				double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 				double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
@@ -119,7 +130,7 @@ public class Game {
 						+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
 			}
 		});
-		frame.addMouseListener(new MouseListener() {
+		gamePanel.addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent mouse) {
 				int m = mouse.getButton();
@@ -144,6 +155,7 @@ public class Game {
 			public void mouseReleased(MouseEvent arg0) {
 			}
 		});
+
 		frame.addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -157,6 +169,9 @@ public class Game {
 					player.goDown = true;
 				if (k == KeyEvent.VK_D || k == KeyEvent.VK_RIGHT)
 					player.goRight = true;
+				if (k == KeyEvent.VK_F3) {
+					debug = !debug;
+				}
 			}
 
 			@Override
@@ -175,6 +190,16 @@ public class Game {
 
 		frame.add(gamePanel);
 		frame.setVisible(true);
+	}
+
+	static void drawDebug(Graphics g) {
+		g.setColor(Color.BLACK);
+		int drawY = 0, incY = 15;
+		g.drawString("FPS: " + fps, 10, drawY += incY);
+		g.drawString("X: " + player.getX() + " Y: " + player.getY(), 10, drawY += incY);
+		g.drawString("TP: " + player.goTp, 10, drawY += incY);
+		g.drawString("TP X: " + player.tpX + " TP Y: " + player.tpY, 10, drawY += incY);
+		g.drawLine(p2x, p2y, p1x, p1y);
 	}
 
 }

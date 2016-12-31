@@ -17,14 +17,18 @@ public class Player extends GameObject {
 	@Override
 	public void tick() {
 		if (this.goTp) {
-			double dx = (this.tpX - this.tpXi) / ((double) this.tpNumFrames);
-			double dy = (this.tpY - this.tpYi) / ((double) this.tpNumFrames);
-			if (this.tpStep <= this.tpNumFrames) {
-				this.tpStep++;
-				setX((int) (this.tpXi + dx * this.tpStep));
-				setY((int) (this.tpYi + dy * this.tpStep));
-			} else
-				this.goTp = false;
+			for (int i = 0; i < this.TPDIST; i++) {
+				double dx = (this.tpX - this.tpXi) / ((double) this.tpNumFrames);
+				double dy = (this.tpY - this.tpYi) / ((double) this.tpNumFrames);
+				if (this.tpStep <= this.tpNumFrames) {
+					this.tpStep++;
+					setX((int) (this.tpXi + dx * this.tpStep));
+					setY((int) (this.tpYi + dy * this.tpStep));
+				} else {
+					this.goTp = false;
+					break;
+				}
+			}
 		}
 		this.setVelX(0);
 		this.setVelY(0);
@@ -60,7 +64,7 @@ public class Player extends GameObject {
 		this.tpYi = this.y;
 		this.tpStep = 1;
 		this.tpNumFrames = (int) (Math.sqrt((this.tpX - this.tpXi) * (this.tpX - this.tpXi) + (this.tpY) * (this.tpYi))
-				/ this.TPDIST);
+				/ 1);
 	}
 
 }
