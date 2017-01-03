@@ -12,18 +12,21 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.30r1";
+	static final String VERSION = "a12.03r1";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
-	static final int WIDTH = 640, HEIGHT = 480;
+	static int width = 1280, height = 720;
+	static int panelWidth, panelHeight;
 
 	// Debug Variables
 	static boolean debug = false;
 	static int fps;
+	static int mouseX, mouseY;
 
 	// Game Variables
 	static JPanel gamePanel;
@@ -44,12 +47,17 @@ public class Game {
 
 	public static void main(String[] args) throws Exception {
 
+		// Determine resolution
+		int[] resolution = openLauncher();
+		width = resolution[0];
+		height = resolution[1];
+
 		// Initialize Sprites
 		sprPlayer = ImageIO.read(new File(assetsDir + "Player.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
-		player = new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, TYPE_PLAYER, sprPlayer);
+		player = new Player(64, 64, TYPE_PLAYER, sprPlayer);
 		gameController.add(player);
 
 		// Start Game
@@ -81,12 +89,23 @@ public class Game {
 		}
 	}
 
+	static int[] openLauncher() {
+		Object[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
+		int returnCode = JOptionPane.showOptionDialog(null,
+				"Welcome to " + TITLE + "!\n\n" + "Choose your game resolution", TITLE, JOptionPane.DEFAULT_OPTION,
+				JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
+		if (returnCode == -1)
+			System.exit(0);
+		return new int[] { Integer.parseInt(options[returnCode].toString().split("x")[0]),
+				Integer.parseInt(options[returnCode].toString().split("x")[1].split(" ")[0]) };
+	}
+
 	@SuppressWarnings("serial")
 	static void createWindow() {
 		frame = new JFrame(TITLE);
-		frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		frame.setMaximumSize(new Dimension(WIDTH, HEIGHT));
-		frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+		frame.setPreferredSize(new Dimension(width, height));
+		frame.setMaximumSize(new Dimension(width, height));
+		frame.setMinimumSize(new Dimension(width, height));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
@@ -115,6 +134,9 @@ public class Game {
 
 			@Override
 			public void mouseMoved(MouseEvent mouse) {
+				mouseX = mouse.getX();
+				mouseY = mouse.getY();
+
 				p1x = (int) (player.getX() + player.rotateLocX);
 				p1y = (int) (player.getY() + player.rotateLocY);
 				p2x = (int) (mouse.getX() + player.rotateLocX);
@@ -190,15 +212,20 @@ public class Game {
 
 		frame.add(gamePanel);
 		frame.setVisible(true);
+
+		panelWidth = gamePanel.getWidth();
+		panelHeight = gamePanel.getHeight();
 	}
 
 	static void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
 		int drawY = 0, incY = 15;
 		g.drawString("FPS: " + fps, 10, drawY += incY);
-		g.drawString("X: " + player.getX() + " Y: " + player.getY(), 10, drawY += incY);
+		g.drawString("X: " + player.getX() + ", Y: " + player.getY() + ", Rotate: " + (int) player.rotateDegs, 10,
+				drawY += incY);
 		g.drawString("TP: " + player.goTp, 10, drawY += incY);
-		g.drawString("TP X: " + player.tpX + " TP Y: " + player.tpY, 10, drawY += incY);
+		g.drawString("TP X: " + player.tpX + ", TP Y: " + player.tpY, 10, drawY += incY);
+		g.drawString("Mouse X: " + mouseX + ", Mouse Y: " + mouseY, 10, drawY += incY);
 		g.drawLine(p2x, p2y, p1x, p1y);
 	}
 

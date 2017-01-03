@@ -7,15 +7,19 @@ public class Player extends GameObject {
 
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false, goTp = false;
 	int tpX, tpY, tpXi, tpYi, tpStep, tpNumFrames;
+	int health, maxHealth;
 
 	final int MOVEDIST = 3, TPDIST = 32;
 
 	public Player(int x, int y, int type, BufferedImage img) {
 		super(x, y, type, img);
+		this.health = 100;
+		this.maxHealth = 100;
 	}
 
 	@Override
 	public void tick() {
+		this.health--;
 		if (this.goTp) {
 			for (int i = 0; i < this.TPDIST; i++) {
 				double dx = (this.tpX - this.tpXi) / ((double) this.tpNumFrames);
@@ -44,16 +48,21 @@ public class Player extends GameObject {
 		this.x += this.MOVEDIST * this.velX;
 		this.y += this.MOVEDIST * this.velY;
 
-		this.x = clamp(this.x, 0, Game.WIDTH - 38);
-		this.y = clamp(this.y, 0, Game.HEIGHT - 60);
+		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
+		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
 	}
 
 	@Override
 	public void render(Graphics g) {
+		// Draw Game Object
 		AffineTransformOp op = new AffineTransformOp(
 				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
 		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
+
+		// Draw HUD Elements
+		// g.setColor(Color.red);
+		// g.fillRect(20, Game.panelHeight - 60, 100, 20);
 	}
 
 	public void setTp(int x, int y) {
@@ -63,8 +72,8 @@ public class Player extends GameObject {
 		this.tpXi = this.x;
 		this.tpYi = this.y;
 		this.tpStep = 1;
-		this.tpNumFrames = (int) (Math.sqrt((this.tpX - this.tpXi) * (this.tpX - this.tpXi) + (this.tpY) * (this.tpYi))
-				/ 1);
+		this.tpNumFrames = (int) (Math.sqrt(
+				(this.tpX - this.tpXi) * (this.tpX - this.tpXi) + (this.tpY - this.tpYi) * (this.tpY - this.tpYi)) / 1);
 	}
 
 }
