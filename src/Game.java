@@ -18,23 +18,21 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.03r2";
+	static final String VERSION = "a12.03r3";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static int width, height, panelWidth, panelHeight;
 
-	// Debug Variables
+	// Game Variables
 	static boolean debug = false;
 	static int fps;
 	static int mouseX, mouseY, tpLocX, tpLocY;
-
-	// Game Variables
+	
 	static JPanel gamePanel;
 	static JFrame frame;
 	static Handler gameController;
 	static boolean running;
 	static Random random = new Random();
 	static Player player;
-	static int p1x, p1y, p2x, p2y, p3x, p3y;
 
 	// Game Constants
 	static final String assetsDir = "Assets/";
@@ -138,20 +136,6 @@ public class Game {
 			public void mouseMoved(MouseEvent mouse) {
 				mouseX = mouse.getX();
 				mouseY = mouse.getY();
-
-				p1x = (int) (player.getX() + player.rotateLocX);
-				p1y = (int) (player.getY() + player.rotateLocY);
-				p2x = (int) (mouse.getX() + player.rotateLocX);
-				p2y = (int) (mouse.getY() + player.rotateLocY);
-				p3x = (int) (player.getX() + player.rotateLocX);
-				p3y = -1;
-
-				double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
-				double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
-				double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
-
-				player.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
-						+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
 			}
 		});
 		gamePanel.addMouseListener(new MouseListener() {
@@ -234,7 +218,7 @@ public class Game {
 		g.drawString("TP: " + player.goTp, 10, drawY += incY);
 		g.drawString("TP X: " + tpLocX + ", TP Y: " + tpLocY, 10, drawY += incY);
 		g.drawString("Mouse X: " + mouseX + ", Mouse Y: " + mouseY, 10, drawY += incY);
-		g.drawLine(p2x, p2y, p1x, p1y);
+		g.drawLine(player.p2x, player.p2y, player.p1x, player.p1y);
 	}
 
 }

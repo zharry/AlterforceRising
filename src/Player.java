@@ -12,6 +12,7 @@ public class Player extends GameObject {
 	
 	// Ability Variables
 	int tpXi, tpYi, tpStep, tpDist, tpMoveDist;
+	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
 	
 	// Player Variables
@@ -44,13 +45,13 @@ public class Player extends GameObject {
 		this.setVelX(0);
 		this.setVelY(0);
 		if (this.goUp)
-			setVelY(-1);
+			this.setVelY(-1);
 		if (this.goDown)
-			setVelY(getVelY() + 1);
+			this.setVelY(this.getVelY() + 1);
 		if (this.goLeft)
-			setVelX(-1);
+			this.setVelX(-1);
 		if (this.goRight)
-			setVelX(getVelX() + 1);
+			this.setVelX(this.getVelX() + 1);
 		// Move the player moveDist pixels in that direction
 		this.x += this.moveDist * this.velX;
 		this.y += this.moveDist * this.velY;
@@ -64,6 +65,20 @@ public class Player extends GameObject {
 	@Override
 	public void render(Graphics g) {
 		// Draw Game Object
+		p1x = (int) (this.getX() + this.rotateLocX);
+		p1y = (int) (this.getY() + this.rotateLocY);
+		p2x = (int) (Game.mouseX + this.rotateLocX);
+		p2y = (int) (Game.mouseY + this.rotateLocY);
+		p3x = (int) (this.getX() + this.rotateLocX);
+		p3y = -1;
+
+		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
+		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
+		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
+
+		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
+				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
+		
 		AffineTransformOp op = new AffineTransformOp(
 				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
