@@ -11,9 +11,8 @@ public class Handler {
 	}
 
 	public void render(Graphics g) {
-		for (GameObject object : gameObjects) {
+		for (GameObject object : gameObjects)
 			object.render(g);
-		}
 	}
 
 	public void add(GameObject obj) {

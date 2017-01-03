@@ -18,15 +18,14 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.03r1";
+	static final String VERSION = "a12.03r2";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
-	static int width = 1280, height = 720;
-	static int panelWidth, panelHeight;
+	static int width, height, panelWidth, panelHeight;
 
 	// Debug Variables
 	static boolean debug = false;
 	static int fps;
-	static int mouseX, mouseY;
+	static int mouseX, mouseY, tpLocX, tpLocY;
 
 	// Game Variables
 	static JPanel gamePanel;
@@ -43,7 +42,7 @@ public class Game {
 	static final int TYPE_ENEMY = 396863;
 
 	// Game Sprites
-	static BufferedImage sprPlayer;
+	static BufferedImage sprPlayer, sprAssassin1;
 
 	public static void main(String[] args) throws Exception {
 
@@ -54,6 +53,7 @@ public class Game {
 
 		// Initialize Sprites
 		sprPlayer = ImageIO.read(new File(assetsDir + "Player.png"));
+		sprAssassin1 = ImageIO.read(new File(assetsDir + "Assassin1.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
@@ -90,12 +90,14 @@ public class Game {
 	}
 
 	static int[] openLauncher() {
+		// Resolution Options
 		Object[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
 		int returnCode = JOptionPane.showOptionDialog(null,
 				"Welcome to " + TITLE + "!\n\n" + "Choose your game resolution", TITLE, JOptionPane.DEFAULT_OPTION,
 				JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
 		if (returnCode == -1)
 			System.exit(0);
+		// LOL, String to Int for the resolution selection
 		return new int[] { Integer.parseInt(options[returnCode].toString().split("x")[0]),
 				Integer.parseInt(options[returnCode].toString().split("x")[1].split(" ")[0]) };
 	}
@@ -157,8 +159,11 @@ public class Game {
 			public void mousePressed(MouseEvent mouse) {
 				int m = mouse.getButton();
 				int xCoor = mouse.getX(), yCoor = mouse.getY();
-				if (m == MouseEvent.BUTTON3)
+				if (m == MouseEvent.BUTTON3) {
 					player.setTp(xCoor, yCoor);
+					tpLocX = xCoor;
+					tpLocY = yCoor;
+				}
 			}
 
 			@Override
@@ -192,6 +197,7 @@ public class Game {
 				if (k == KeyEvent.VK_D || k == KeyEvent.VK_RIGHT)
 					player.goRight = true;
 				if (k == KeyEvent.VK_F3) {
+					// Toggle Debug State
 					debug = !debug;
 				}
 			}
@@ -219,12 +225,14 @@ public class Game {
 
 	static void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
-		int drawY = 0, incY = 15;
+		int drawY = 0, incY = 15;																																																
 		g.drawString("FPS: " + fps, 10, drawY += incY);
 		g.drawString("X: " + player.getX() + ", Y: " + player.getY() + ", Rotate: " + (int) player.rotateDegs, 10,
 				drawY += incY);
+		g.drawString("Vel X: " + player.getVelX() + ", Vel Y: " + player.getVelY(), 10,
+				drawY += incY);
 		g.drawString("TP: " + player.goTp, 10, drawY += incY);
-		g.drawString("TP X: " + player.tpX + ", TP Y: " + player.tpY, 10, drawY += incY);
+		g.drawString("TP X: " + tpLocX + ", TP Y: " + tpLocY, 10, drawY += incY);
 		g.drawString("Mouse X: " + mouseX + ", Mouse Y: " + mouseY, 10, drawY += incY);
 		g.drawLine(p2x, p2y, p1x, p1y);
 	}

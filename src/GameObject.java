@@ -62,6 +62,7 @@ public abstract class GameObject {
 		return this.type;
 	}
 
+	// Overload clamp to allow for double and int arguments
 	public double clamp(double i, double min, double max) {
 		return i < min ? min : i > max ? max : i;
 	}
