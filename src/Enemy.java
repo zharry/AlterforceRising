@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class Enemy extends GameObject {
 
-	// Health Related Variables
+	// Health Variables
 	int health = 100, maxHealth = 100;
 	
 	public Enemy(int x, int y, int type, BufferedImage img) {
@@ -15,6 +15,7 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void tick() {
+		// Move this object to Game.player
 
 		// Make sure none of the values exceed the max and min for the game
 		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
