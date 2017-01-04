@@ -15,6 +15,7 @@ public class Player extends GameObject {
 	int tpXi, tpYi, tpStep, tpDist, tpMoveDist;
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
+	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
 
 	// Player Variables
 	int health, maxHealth;
@@ -36,6 +37,7 @@ public class Player extends GameObject {
 					this.tpStep++;
 				else {
 					this.goTp = false;
+					this.tpDamaged.removeAll(this.tpDamaged);
 					break;
 				}
 			setX((int) (this.tpXi + tpDX * this.tpStep));
@@ -61,9 +63,13 @@ public class Player extends GameObject {
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
 		for (GameObject obj : inCollisionWith) {
 			if (obj.getType() == Game.TYPE_ENEMY) {
-				Enemy temp = (Enemy) obj;
-				temp.health /= 2;
-				this.health--;
+				Enemy enemy = (Enemy) obj;
+				if (this.goTp && !this.tpDamaged.contains(obj)) {
+					enemy.health /= 2;
+					this.tpDamaged.add(obj);
+				} else {
+					this.health--;
+				}
 			}
 		}
 
