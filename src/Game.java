@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.03r3";
+	static final String VERSION = "a12.04r2";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static int width, height, panelWidth, panelHeight;
 
@@ -57,6 +57,8 @@ public class Game {
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer);
 		gameController.add(player);
+		Enemy test = new Enemy(128, 128, TYPE_ENEMY, sprAssassin1);
+		gameController.add(test);
 
 		// Start Game
 		running = true;
@@ -89,15 +91,15 @@ public class Game {
 
 	static int[] openLauncher() {
 		// Resolution Options
-		Object[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
+		String[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
 		int returnCode = JOptionPane.showOptionDialog(null,
 				"Welcome to " + TITLE + "!\n\n" + "Choose your game resolution", TITLE, JOptionPane.DEFAULT_OPTION,
 				JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
 		if (returnCode == -1)
 			System.exit(0);
 		// LOL, String to Int for the resolution selection
-		return new int[] { Integer.parseInt(options[returnCode].toString().split("x")[0]),
-				Integer.parseInt(options[returnCode].toString().split("x")[1].split(" ")[0]) };
+		return new int[] { Integer.parseInt(options[returnCode].split("x")[0]),
+				Integer.parseInt(options[returnCode].split("x")[1].split(" ")[0]) };
 	}
 
 	@SuppressWarnings("serial")
@@ -116,7 +118,6 @@ public class Game {
 				// Reset Frame
 				g.setColor(Color.lightGray);
 				g.fillRect(0, 0, getWidth(), getHeight());
-				g.setColor(Color.black);
 				// Render Game
 				gameController.render(g);
 				if (debug)
@@ -208,7 +209,7 @@ public class Game {
 	}
 
 	static void drawDebug(Graphics g) {
-		g.setColor(Color.BLACK);
+		g.setColor(Color.black);
 		int drawY = 0, incY = 15;																																																
 		g.drawString("FPS: " + fps, 10, drawY += incY);
 		g.drawString("X: " + player.getX() + ", Y: " + player.getY() + ", Rotate: " + (int) player.rotateDegs, 10,
