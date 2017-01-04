@@ -16,6 +16,7 @@ public class Player extends GameObject {
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
 	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
+	int tpCooldownTimer = 0, tpCooldownAmount = 3;
 
 	// Health Variables
 	int health, maxHealth;
@@ -30,6 +31,8 @@ public class Player extends GameObject {
 
 	@Override
 	public void tick() {
+		this.tpCooldownTimer--;
+		
 		if (this.goTp) {
 			// TP the player tpMoveDist amount forward for this tick
 			for (int i = 0; i < this.tpMoveDist; i++)
@@ -79,6 +82,7 @@ public class Player extends GameObject {
 		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
 		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
 		this.health = clamp(this.health, 0, this.maxHealth);
+		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount * Game.tps);
 	}
 
 	@Override
@@ -112,13 +116,16 @@ public class Player extends GameObject {
 	}
 
 	public void setTp(int x, int y) {
-		this.goTp = true;
-		this.tpXi = this.x;
-		this.tpYi = this.y;
-		this.tpStep = 1;
-		this.tpDist = (int) (Math.sqrt((x - this.tpXi) * (x - this.tpXi) + (y - this.tpYi) * (y - this.tpYi)));
-		this.tpDX = (x - this.tpXi) / ((double) this.tpDist);
-		this.tpDY = (y - this.tpYi) / ((double) this.tpDist);
+		if (this.tpCooldownTimer == 0) {
+			this.tpCooldownTimer = Game.tps * this.tpCooldownAmount ;
+			this.goTp = true;
+			this.tpXi = this.x;
+			this.tpYi = this.y;
+			this.tpStep = 1;
+			this.tpDist = (int) (Math.sqrt((x - this.tpXi) * (x - this.tpXi) + (y - this.tpYi) * (y - this.tpYi)));
+			this.tpDX = (x - this.tpXi) / ((double) this.tpDist);
+			this.tpDY = (y - this.tpYi) / ((double) this.tpDist);
+		}
 	}
 
 }

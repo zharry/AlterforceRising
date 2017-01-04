@@ -24,7 +24,7 @@ public class Game {
 
 	// Game Variables
 	static boolean debug = false;
-	static int fps;
+	static int fps, tps = 60;
 	static int mouseX, mouseY, tpLocX, tpLocY;
 	
 	static JPanel gamePanel;
@@ -66,7 +66,7 @@ public class Game {
 
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
-		double numTicks = 60.0, ns = 1000000000 / numTicks, delta = 0;
+		double ns = 1000000000 / (double) tps, delta = 0;
 		int fpsProc = 0;
 		while (running) {
 			long curTime = System.nanoTime();
@@ -218,6 +218,7 @@ public class Game {
 				drawY += incY);
 		g.drawString("TP: " + player.goTp, 10, drawY += incY);
 		g.drawString("TP X: " + tpLocX + ", TP Y: " + tpLocY, 10, drawY += incY);
+		g.drawString("TP Cooldown: " + player.tpCooldownTimer, 10, drawY += incY);
 		g.drawString("Mouse X: " + mouseX + ", Mouse Y: " + mouseY, 10, drawY += incY);
 		g.drawLine(player.p2x, player.p2y, player.p1x, player.p1y);
 	}
