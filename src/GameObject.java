@@ -22,46 +22,6 @@ public abstract class GameObject {
 
 	public abstract void render(Graphics g);
 
-	public void setX(int i) {
-		this.x = i;
-	}
-
-	public void setY(int i) {
-		this.y = i;
-	}
-
-	public void setVelX(int i) {
-		this.velX = i;
-	}
-
-	public void setVelY(int i) {
-		this.velY = i;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public int getX() {
-		return this.x;
-	}
-
-	public int getY() {
-		return this.y;
-	}
-
-	public int getVelX() {
-		return this.velX;
-	}
-
-	public int getVelY() {
-		return this.velY;
-	}
-
-	public int getType() {
-		return this.type;
-	}
-
 	// Overload clamp to allow for double and int arguments
 	public double clamp(double i, double min, double max) {
 		return i < min ? min : i > max ? max : i;

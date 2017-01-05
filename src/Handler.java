@@ -17,7 +17,7 @@ public class Handler {
 
 	public void render(Graphics g) {
 		for (GameObject object : gameObjects)
-			if (object.getType() != Game.TYPE_PLAYER)
+			if (object.type != Game.TYPE_PLAYER)
 				object.render(g);
 		Game.player.render(g);
 	}
@@ -44,10 +44,10 @@ public class Handler {
 			int rw = obj1.sprite.getWidth();
 			int rh = obj1.sprite.getHeight();
 			if (!(rw <= 0 || rh <= 0 || tw <= 0 || th <= 0)) {
-				int tx = obj.getX();
-				int ty = obj.getY();
-				int rx = obj1.getX();
-				int ry = obj1.getY();
+				int tx = obj.x;
+				int ty = obj.y;
+				int rx = obj1.x;
+				int ry = obj1.y;
 				rw += rx;
 				rh += ry;
 				tw += tx;

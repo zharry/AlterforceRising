@@ -10,31 +10,33 @@ public class Player extends GameObject {
 
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false, goTp = false;
-	int moveDist;
+	int moveDist = 3;
 
 	// Ability Variables
-	int tpXi, tpYi, tpStep, tpDist, tpMoveDist;
+	int tpXi, tpYi, tpStep, tpDist, tpMoveDist = 32;
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
 	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
 	int tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps; // All measured in
 																// ticks
-
+	// Knockback Variables
+	boolean underKnockback;
+	int kbVelX, kbVelY, kbStep, knockbackPerFrame = 4;
+	
 	// Health Variables
-	int health, maxHealth;
+	int health = 100, maxHealth = 100;
 
 	public Player(int x, int y, int type, BufferedImage img) {
 		super(x, y, type, img);
-		this.health = 100;
-		this.maxHealth = 100;
-		this.moveDist = 3;
-		this.tpMoveDist = 32;
 	}
 
 	@Override
 	public void tick() {
 		this.tpCooldownTimer--;
-		
+
+		// Reset Player Velocity
+		this.velX = 0;
+		this.velY = 0;
 		if (this.goTp) {
 			// TP the player tpMoveDist amount forward for this tick
 			for (int i = 0; i < this.tpMoveDist; i++)
@@ -45,29 +47,36 @@ public class Player extends GameObject {
 					this.tpDamaged.removeAll(this.tpDamaged);
 					break;
 				}
-			setX((int) (this.tpXi + tpDX * this.tpStep));
-			setY((int) (this.tpYi + tpDY * this.tpStep));
+			this.x = (int) (this.tpXi + tpDX * this.tpStep);
+			this.y = (int) (this.tpYi + tpDY * this.tpStep);
+		} else if (this.underKnockback) {
+			this.kbStep--;
+			if (this.kbStep > 0) {
+				this.velX = this.kbVelX * this.knockbackPerFrame;
+				this.velY = this.kbVelY * this.knockbackPerFrame;
+			} else {
+				this.underKnockback = false;
+			}
+		} else {
+			// Set the velocity based on player input
+			if (this.goUp)
+				this.velY = -1;
+			if (this.goDown)
+				this.velY = this.velY + 1;
+			if (this.goLeft)
+				this.velX = -1;
+			if (this.goRight)
+				this.velX = this.velX + 1;
 		}
 
-		// Set the velocity based on player input
-		this.setVelX(0);
-		this.setVelY(0);
-		if (this.goUp)
-			this.setVelY(-1);
-		if (this.goDown)
-			this.setVelY(this.getVelY() + 1);
-		if (this.goLeft)
-			this.setVelX(-1);
-		if (this.goRight)
-			this.setVelX(this.getVelX() + 1);
 		// Move the player moveDist pixels in that direction
 		this.x += this.moveDist * this.velX;
 		this.y += this.moveDist * this.velY;
-
+		
 		// Collision Detection
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
 		for (GameObject obj : inCollisionWith) {
-			if (obj.getType() == Game.TYPE_ENEMY) {
+			if (obj.type == Game.TYPE_ENEMY) {
 				Enemy enemy = (Enemy) obj;
 				if (this.goTp) {
 					if (!this.tpDamaged.contains(obj)) {
@@ -75,7 +84,8 @@ public class Player extends GameObject {
 						this.tpDamaged.add(obj);
 					}
 				} else {
-					this.health--;
+					this.health -= enemy.damage;
+					this.setKnockback(enemy.knockback);
 				}
 			}
 		}
@@ -90,12 +100,12 @@ public class Player extends GameObject {
 	@Override
 	public void render(Graphics g) {
 		// Draw Game Object
-		p1x = (int) (this.getX() + this.rotateLocX);
-		p1y = (int) (this.getY() + this.rotateLocY);
-		p2x = (int) (Game.mouseX + this.rotateLocX);
-		p2y = (int) (Game.mouseY + this.rotateLocY);
-		p3x = (int) (this.getX() + this.rotateLocX);
-		p3y = -1;
+		this.p1x = (int) (this.x + this.rotateLocX);
+		this.p1y = (int) (this.y + this.rotateLocY);
+		this.p2x = (int) (Game.mouseX + this.rotateLocX);
+		this.p2y = (int) (Game.mouseY + this.rotateLocY);
+		this.p3x = (int) (this.x + this.rotateLocX);
+		this.p3y = -1;
 		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
 		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
@@ -105,6 +115,10 @@ public class Player extends GameObject {
 				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
 		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
+		if (this.underKnockback) {
+			g.setColor(new Color(255,0,0,128));
+			g.fillOval(this.x, this.y, 32, 32);
+		}
 
 		// Draw HUD Elements
 		// Healthbar
@@ -120,15 +134,17 @@ public class Player extends GameObject {
 		g.setColor(Color.cyan);
 		g.fillRect(150, Game.panelHeight - 55, 35, 35);
 		g.drawImage(Game.sprTPIcon, 150, Game.panelHeight - 55, null);
-		g.setColor(new Color(Color.gray.getRed(),Color.gray.getGreen(),Color.gray.getBlue(), 215));
+		g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
 		g.fillRect(150, Game.panelHeight - 55, 35, (int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
 		g.setColor(Color.black);
 		g.drawRect(150, Game.panelHeight - 55, 35, 35);
 		if (this.tpCooldownTimer > 0) {
+			Font orig = g.getFont();
 			g.setColor(Color.black);
 			g.setFont(new Font("default", Font.BOLD, 14));
 			g.drawString(Math.round((this.tpCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 159,
 					Game.panelHeight - 33);
+			g.setFont(orig);
 		}
 	}
 
@@ -143,6 +159,13 @@ public class Player extends GameObject {
 			this.tpDX = (x - this.tpXi) / ((double) this.tpDist);
 			this.tpDY = (y - this.tpYi) / ((double) this.tpDist);
 		}
+	}
+	
+	public void setKnockback(int kb) {
+		this.underKnockback = true;
+		this.kbVelX = -this.velX;
+		this.kbVelY = -this.velY;
+		this.kbStep = kb;
 	}
 
 }

@@ -6,11 +6,16 @@ import java.awt.image.BufferedImage;
 
 public class Enemy extends GameObject {
 
+	// Attack Variables
+	int damage, knockback;
+	
 	// Health Variables
 	int health = 100, maxHealth = 100;
 	
-	public Enemy(int x, int y, int type, BufferedImage img) {
+	public Enemy(int x, int y, int type, BufferedImage img, int damage, int knockback) {
 		super(x, y, type, img);
+		this.damage = damage;
+		this.knockback = knockback; // Measured in frames
 	}
 
 	@Override
@@ -42,5 +47,5 @@ public class Enemy extends GameObject {
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect(this.x, this.y - 10, 32, 5);
 	}
-
+	
 }

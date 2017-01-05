@@ -52,15 +52,15 @@ public class Game {
 		height = resolution[1];
 
 		// Initialize Sprites
-		sprPlayer = ImageIO.read(new File(assetsDir + "Player.png"));
-		sprAssassin1 = ImageIO.read(new File(assetsDir + "Assassin1.png"));
-		sprTPIcon = ImageIO.read(new File(assetsDir + "TPIcon.png"));
+		sprPlayer = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Player.png"));
+		sprAssassin1 = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Assassin1.png"));
+		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer);
 		gameController.add(player);
-		Enemy test = new Enemy(128, 128, TYPE_ENEMY, sprAssassin1);
+		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, 3, 5);
 		gameController.add(test);
 
 		// Start Game
@@ -88,11 +88,17 @@ public class Game {
 				timer += 1000;
 				fps = fpsProc;
 				fpsProc = 0;
+				if (debug)
+					Debug.debugConsole();
 			}
 		}
 	}
 
 	static int[] openLauncher() {
+        JFrame temp = new JFrame(TITLE);
+        temp.setUndecorated( true );
+        temp.setVisible( true );
+        temp.setLocationRelativeTo( null );
 		// Resolution Options
 		String[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
 		int returnCode = JOptionPane.showOptionDialog(null,
@@ -100,6 +106,7 @@ public class Game {
 				JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
 		if (returnCode == -1)
 			System.exit(0);
+        temp.dispose();
 		// LOL, String to Int for the resolution selection
 		return new int[] { Integer.parseInt(options[returnCode].split("x")[0]),
 				Integer.parseInt(options[returnCode].split("x")[1].split(" ")[0]) };
@@ -124,7 +131,7 @@ public class Game {
 				// Render Game
 				gameController.render(g);
 				if (debug)
-					drawDebug(g);
+					Debug.drawDebug(g);
 			}
 		};
 
@@ -209,21 +216,6 @@ public class Game {
 
 		panelWidth = gamePanel.getWidth();
 		panelHeight = gamePanel.getHeight();
-	}
-
-	static void drawDebug(Graphics g) {
-		g.setColor(Color.black);
-		int drawY = 0, incY = 15;																																																
-		g.drawString("FPS: " + fps, 10, drawY += incY);
-		g.drawString("X: " + player.getX() + ", Y: " + player.getY() + ", Rotate: " + (int) player.rotateDegs, 10,
-				drawY += incY);
-		g.drawString("Vel X: " + player.getVelX() + ", Vel Y: " + player.getVelY(), 10,
-				drawY += incY);
-		g.drawString("TP: " + player.goTp, 10, drawY += incY);
-		g.drawString("TP X: " + tpLocX + ", TP Y: " + tpLocY, 10, drawY += incY);
-		g.drawString("TP Cooldown: " + player.tpCooldownTimer + ", TP Cooldown Amount: " + player.tpCooldownAmount, 10, drawY += incY);
-		g.drawString("Mouse X: " + mouseX + ", Mouse Y: " + mouseY, 10, drawY += incY);
-		g.drawLine(player.p2x, player.p2y, player.p1x, player.p1y);
 	}
 
 }
