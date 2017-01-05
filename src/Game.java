@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -33,7 +34,7 @@ public class Game {
 	static boolean running;
 	static Random random = new Random();
 	static Player player;
-
+	
 	// Game Constants
 	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
@@ -41,6 +42,7 @@ public class Game {
 
 	// Game Sprites
 	static BufferedImage sprPlayer, sprAssassin1;
+	static BufferedImage sprTPIcon;
 
 	public static void main(String[] args) throws Exception {
 
@@ -52,6 +54,7 @@ public class Game {
 		// Initialize Sprites
 		sprPlayer = ImageIO.read(new File(assetsDir + "Player.png"));
 		sprAssassin1 = ImageIO.read(new File(assetsDir + "Assassin1.png"));
+		sprTPIcon = ImageIO.read(new File(assetsDir + "TPIcon.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
@@ -218,7 +221,7 @@ public class Game {
 				drawY += incY);
 		g.drawString("TP: " + player.goTp, 10, drawY += incY);
 		g.drawString("TP X: " + tpLocX + ", TP Y: " + tpLocY, 10, drawY += incY);
-		g.drawString("TP Cooldown: " + player.tpCooldownTimer, 10, drawY += incY);
+		g.drawString("TP Cooldown: " + player.tpCooldownTimer + ", TP Cooldown Amount: " + player.tpCooldownAmount, 10, drawY += incY);
 		g.drawString("Mouse X: " + mouseX + ", Mouse Y: " + mouseY, 10, drawY += incY);
 		g.drawLine(player.p2x, player.p2y, player.p1x, player.p1y);
 	}

@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -16,7 +17,8 @@ public class Player extends GameObject {
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
 	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
-	int tpCooldownTimer = 0, tpCooldownAmount = 3;
+	int tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps; // All measured in
+																// ticks
 
 	// Health Variables
 	int health, maxHealth;
@@ -82,7 +84,7 @@ public class Player extends GameObject {
 		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
 		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
 		this.health = clamp(this.health, 0, this.maxHealth);
-		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount * Game.tps);
+		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
 	}
 
 	@Override
@@ -105,7 +107,8 @@ public class Player extends GameObject {
 		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
 
 		// Draw HUD Elements
-		g.setColor(Color.black);
+		// Healthbar
+		g.setColor(Color.red);
 		g.fillRect(20, Game.panelHeight - 40, 100, 20);
 		g.setColor(Color.green);
 		g.fillRect(20, Game.panelHeight - 40, (int) (this.health / (double) this.maxHealth * 100), 20);
@@ -113,11 +116,25 @@ public class Player extends GameObject {
 		g.drawRect(20, Game.panelHeight - 40, 100, 20);
 		g.setColor(Color.black);
 		g.drawString("Health: " + this.health + "/" + this.maxHealth, 20, Game.panelHeight - 45);
+		// TP Cooldown Indicator
+		g.setColor(Color.cyan);
+		g.fillRect(150, Game.panelHeight - 55, 35, 35);
+		g.drawImage(Game.sprTPIcon, 150, Game.panelHeight - 55, null);
+		g.setColor(new Color(Color.gray.getRed(),Color.gray.getGreen(),Color.gray.getBlue(), 215));
+		g.fillRect(150, Game.panelHeight - 55, 35, (int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
+		g.setColor(Color.black);
+		g.drawRect(150, Game.panelHeight - 55, 35, 35);
+		if (this.tpCooldownTimer > 0) {
+			g.setColor(Color.black);
+			g.setFont(new Font("default", Font.BOLD, 14));
+			g.drawString(Math.round((this.tpCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 159,
+					Game.panelHeight - 33);
+		}
 	}
 
 	public void setTp(int x, int y) {
 		if (this.tpCooldownTimer == 0) {
-			this.tpCooldownTimer = Game.tps * this.tpCooldownAmount ;
+			this.tpCooldownTimer = this.tpCooldownAmount;
 			this.goTp = true;
 			this.tpXi = this.x;
 			this.tpYi = this.y;
