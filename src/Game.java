@@ -25,7 +25,7 @@ public class Game {
 
 	// Game Variables
 	static boolean debug = false;
-	static int fps, tps = 60;
+	static int fps, tps = 60, curTps;
 	static int mouseX, mouseY, tpLocX, tpLocY;
 	
 	static JPanel gamePanel;
@@ -60,7 +60,7 @@ public class Game {
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer);
 		gameController.add(player);
-		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, 3, 5);
+		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, 3, 48);
 		gameController.add(test);
 
 		// Start Game
@@ -70,7 +70,7 @@ public class Game {
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
 		double ns = 1000000000 / (double) tps, delta = 0;
-		int fpsProc = 0;
+		int fpsProc = 0, tpsProc = 0;
 		while (running) {
 			long curTime = System.nanoTime();
 			delta += (curTime - lastTime) / ns;
@@ -78,16 +78,19 @@ public class Game {
 			while (delta >= 1) {
 				// Process Game Changes
 				gameController.tick();
+				tpsProc++;
 				delta--;
 			}
 			// Update the Graphics
 			gamePanel.repaint();
-			// Display FPS
+			// Display FPS and TPS
 			fpsProc++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				fps = fpsProc;
+				curTps = tpsProc;
 				fpsProc = 0;
+				tpsProc = 0;
 				if (debug)
 					Debug.debugConsole();
 			}
@@ -154,11 +157,8 @@ public class Game {
 			public void mousePressed(MouseEvent mouse) {
 				int m = mouse.getButton();
 				int xCoor = mouse.getX(), yCoor = mouse.getY();
-				if (m == MouseEvent.BUTTON3) {
-					player.setTp(xCoor, yCoor);
-					tpLocX = xCoor;
-					tpLocY = yCoor;
-				}
+				if (m == MouseEvent.BUTTON3)
+					player.tpPrep = true;
 			}
 
 			@Override
@@ -166,7 +166,7 @@ public class Game {
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent mouse) {
+			public void mouseEntered(MouseEvent arg0) {
 			}
 
 			@Override
@@ -174,7 +174,14 @@ public class Game {
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
+			public void mouseReleased(MouseEvent mouse) {
+				int m = mouse.getButton();
+				int xCoor = mouse.getX(), yCoor = mouse.getY();
+				if (m == MouseEvent.BUTTON3 && player.tpPrep) {
+					player.setTp(xCoor, yCoor);
+					tpLocX = xCoor;
+					tpLocY = yCoor;
+				}
 			}
 		});
 
@@ -191,6 +198,8 @@ public class Game {
 					player.goDown = true;
 				if (k == KeyEvent.VK_D || k == KeyEvent.VK_RIGHT)
 					player.goRight = true;
+				if (k == KeyEvent.VK_CONTROL)
+					player.canelAbilities();
 				if (k == KeyEvent.VK_F3) {
 					// Toggle Debug State
 					debug = !debug;

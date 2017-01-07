@@ -10,12 +10,12 @@ public class Enemy extends GameObject {
 	int damage, knockback;
 	
 	// Health Variables
-	int health = 100, maxHealth = 100;
+	double health = 100, maxHealth = 100;
 	
 	public Enemy(int x, int y, int type, BufferedImage img, int damage, int knockback) {
 		super(x, y, type, img);
 		this.damage = damage;
-		this.knockback = knockback; // Measured in frames
+		this.knockback = knockback; // Measured in pixels
 	}
 
 	@Override

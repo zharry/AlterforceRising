@@ -7,12 +7,15 @@ public class Handler {
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
 	public void tick() {
+		for (GameObject object : gameObjects)
+			object.tick();
+		if (Game.random.nextInt(Game.tps * 12) == 0) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, 3, 48));
+		}
 		while (!toRemove.isEmpty()) {
 			gameObjects.remove(toRemove.get(0));
 			toRemove.remove(toRemove.get(0));
 		}
-		for (GameObject object : gameObjects)
-			object.tick();
 	}
 
 	public void render(Graphics g) {

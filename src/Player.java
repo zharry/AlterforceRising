@@ -1,6 +1,8 @@
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -9,11 +11,12 @@ import java.util.ArrayList;
 public class Player extends GameObject {
 
 	// Movement Variables
-	boolean goUp = false, goDown = false, goLeft = false, goRight = false, goTp = false;
+	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
 	int moveDist = 3;
 
 	// Ability Variables
-	int tpXi, tpYi, tpStep, tpDist, tpMoveDist = 32;
+	boolean tpPrep, goTp = false;
+	int tpXi, tpYi, tpStep, tpDist, tpMoveDist = 48;
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
 	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
@@ -21,10 +24,11 @@ public class Player extends GameObject {
 																// ticks
 	// Knockback Variables
 	boolean underKnockback;
-	int kbVelX, kbVelY, kbStep, knockbackPerFrame = 4;
-	
+	int kbVelX, kbVelY, kbStep, knockbackPerFrame = 12;
+
 	// Health Variables
-	int health = 100, maxHealth = 100;
+	double health = 100, maxHealth = 100;
+	double healthRegen = 0.15;
 
 	public Player(int x, int y, int type, BufferedImage img) {
 		super(x, y, type, img);
@@ -33,6 +37,7 @@ public class Player extends GameObject {
 	@Override
 	public void tick() {
 		this.tpCooldownTimer--;
+		this.health += this.healthRegen / Game.tps;
 
 		// Reset Player Velocity
 		this.velX = 0;
@@ -51,9 +56,9 @@ public class Player extends GameObject {
 			this.y = (int) (this.tpYi + tpDY * this.tpStep);
 		} else if (this.underKnockback) {
 			this.kbStep--;
-			if (this.kbStep > 0) {
-				this.velX = this.kbVelX * this.knockbackPerFrame;
-				this.velY = this.kbVelY * this.knockbackPerFrame;
+			if (this.kbStep >= 0) {
+				this.x += this.kbVelX;
+				this.y += this.kbVelY;
 			} else {
 				this.underKnockback = false;
 			}
@@ -67,12 +72,11 @@ public class Player extends GameObject {
 				this.velX = -1;
 			if (this.goRight)
 				this.velX = this.velX + 1;
+			// Move the player moveDist pixels in that direction
+			this.x += this.moveDist * this.velX;
+			this.y += this.moveDist * this.velY;
 		}
 
-		// Move the player moveDist pixels in that direction
-		this.x += this.moveDist * this.velX;
-		this.y += this.moveDist * this.velY;
-		
 		// Collision Detection
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
 		for (GameObject obj : inCollisionWith) {
@@ -85,7 +89,7 @@ public class Player extends GameObject {
 					}
 				} else {
 					this.health -= enemy.damage;
-					this.setKnockback(enemy.knockback);
+					this.setKnockback(enemy.knockback, enemy.x, enemy.y);
 				}
 			}
 		}
@@ -116,7 +120,7 @@ public class Player extends GameObject {
 				AffineTransformOp.TYPE_BILINEAR);
 		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
 		if (this.underKnockback) {
-			g.setColor(new Color(255,0,0,128));
+			g.setColor(new Color(255, 0, 0, 128));
 			g.fillOval(this.x, this.y, 32, 32);
 		}
 
@@ -129,7 +133,9 @@ public class Player extends GameObject {
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect(20, Game.panelHeight - 40, 100, 20);
 		g.setColor(Color.black);
-		g.drawString("Health: " + this.health + "/" + this.maxHealth, 20, Game.panelHeight - 45);
+		g.drawString("Health: " + Math.round(this.health * 10) / 10.0 + "/" + this.maxHealth, 20,
+				Game.panelHeight - 45);
+		g.drawString("Health Regen: " + this.healthRegen, 20, Game.panelHeight - 58);
 		// TP Cooldown Indicator
 		g.setColor(Color.cyan);
 		g.fillRect(150, Game.panelHeight - 55, 35, 35);
@@ -146,10 +152,19 @@ public class Player extends GameObject {
 					Game.panelHeight - 33);
 			g.setFont(orig);
 		}
+		// TP Location Indicator
+		if (this.tpCooldownTimer == 0 && this.tpPrep) {
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+			g.drawImage(op.filter(this.sprite, null), Game.mouseX, Game.mouseY, null);
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		}
 	}
 
 	public void setTp(int x, int y) {
 		if (this.tpCooldownTimer == 0) {
+			this.tpPrep = false;
+			this.underKnockback = false;
 			this.tpCooldownTimer = this.tpCooldownAmount;
 			this.goTp = true;
 			this.tpXi = this.x;
@@ -160,12 +175,20 @@ public class Player extends GameObject {
 			this.tpDY = (y - this.tpYi) / ((double) this.tpDist);
 		}
 	}
-	
-	public void setKnockback(int kb) {
+
+	public void setKnockback(int kb, int x2, int y2) {
 		this.underKnockback = true;
-		this.kbVelX = -this.velX;
-		this.kbVelY = -this.velY;
-		this.kbStep = kb;
+		double dx = this.x - x2, dy = this.y - y2, dist = Math.sqrt(dx * dx + dy * dy);
+		double velX = (dx / dist) * this.knockbackPerFrame, velY = (dy / dist) * this.knockbackPerFrame;
+		this.kbVelX = (int) (Math.round(velX) == 0 ? (velX > 0 ? Math.ceil(velX) : Math.floor(velX))
+				: Math.round(velX));
+		this.kbVelY = (int) (Math.round(velY) == 0 ? (velY > 0 ? Math.ceil(velY) : Math.floor(velY))
+				: Math.round(velY));
+		this.kbStep = kb / this.knockbackPerFrame;
+	}
+	
+	public void canelAbilities() {
+		this.tpPrep = false;
 	}
 
 }
