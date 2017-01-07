@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -12,11 +13,12 @@ public class Player extends GameObject {
 
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
-	int moveDist = 3;
+	int moveDist = 2;
+	int colBoxOffsetX, colBoxOffsetY;
 
 	// Ability Variables
 	boolean tpPrep, goTp = false;
-	int tpXi, tpYi, tpStep, tpDist, tpMoveDist = 48;
+	int tpXi, tpYi, tpStep, tpDist, tpMoveDist = 64;
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 	double tpDX, tpDY;
 	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
@@ -24,14 +26,16 @@ public class Player extends GameObject {
 																// ticks
 	// Knockback Variables
 	boolean underKnockback;
-	int kbVelX, kbVelY, kbStep, knockbackPerFrame = 12;
+	int kbVelX, kbVelY, kbStep, knockbackPerFrame = 8;
 
 	// Health Variables
 	double health = 100, maxHealth = 100;
 	double healthRegen = 0.15;
 
-	public Player(int x, int y, int type, BufferedImage img) {
-		super(x, y, type, img);
+	public Player(int x, int y, int type, BufferedImage img, Rectangle colBox) {
+		super(x, y, type, img, colBox);
+		this.colBoxOffsetX = colBox.x - x;
+		this.colBoxOffsetY = colBox.y - y;
 	}
 
 	@Override
@@ -57,24 +61,21 @@ public class Player extends GameObject {
 		} else if (this.underKnockback) {
 			this.kbStep--;
 			if (this.kbStep >= 0) {
-				this.x += this.kbVelX;
-				this.y += this.kbVelY;
+				this.velX += this.kbVelX;
+				this.velY += this.kbVelY;
 			} else {
 				this.underKnockback = false;
 			}
 		} else {
 			// Set the velocity based on player input
 			if (this.goUp)
-				this.velY = -1;
+				this.velY = -this.moveDist;
 			if (this.goDown)
-				this.velY = this.velY + 1;
+				this.velY = (this.velY + 1) * this.moveDist;
 			if (this.goLeft)
-				this.velX = -1;
+				this.velX = -this.moveDist;
 			if (this.goRight)
-				this.velX = this.velX + 1;
-			// Move the player moveDist pixels in that direction
-			this.x += this.moveDist * this.velX;
-			this.y += this.moveDist * this.velY;
+				this.velX = (this.velX + 1) * this.moveDist;
 		}
 
 		// Collision Detection
@@ -92,6 +93,18 @@ public class Player extends GameObject {
 					this.setKnockback(enemy.knockback, enemy.x, enemy.y);
 				}
 			}
+		}
+
+		// Move the player moveDist pixels in that direction
+		this.x += this.velX;
+		this.y += this.velY;
+		
+		// Move the collision box aswell
+		this.colBox.x = this.x + this.colBoxOffsetX;
+		this.colBox.y = this.y + this.colBoxOffsetY;
+		if (this.goTp) {
+			this.colBox.x = (int) (this.tpXi + tpDX * this.tpStep);
+			this.colBox.y = (int) (this.tpYi + tpDY * this.tpStep);
 		}
 
 		// Make sure none of the values exceed the max and min for the game

@@ -23,6 +23,11 @@ public class Debug {
 		g.drawString("KB Vel X: " + Game.player.kbVelX + ", KB Vel Y: " + Game.player.kbVelY, 10, drawY += incY);
 		// Player Rotation Visualization
 		g.drawLine(Game.player.p2x, Game.player.p2y, Game.player.p1x, Game.player.p1y);
+		
+		// Draw Debug Collision Boxes
+		for (GameObject obj : Game.gameController.gameObjects) {
+			obj.drawColBox(g);
+		}
 	}
 
 	static void debugConsole() {

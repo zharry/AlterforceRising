@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -7,15 +8,15 @@ import java.awt.image.BufferedImage;
 public class Enemy extends GameObject {
 
 	// Attack Variables
-	int damage, knockback;
+	int damage, knockback; // Knockback Measured in pixels
 	
 	// Health Variables
 	double health = 100, maxHealth = 100;
 	
-	public Enemy(int x, int y, int type, BufferedImage img, int damage, int knockback) {
-		super(x, y, type, img);
+	public Enemy(int x, int y, int type, BufferedImage img, Rectangle colBox, int damage, int knockback) {
+		super(x, y, type, img, colBox);
 		this.damage = damage;
-		this.knockback = knockback; // Measured in pixels
+		this.knockback = knockback; 
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void render(Graphics g) {
 		AffineTransformOp op = new AffineTransformOp(
-				AffineTransform.getRotateInstance(Math.toRadians(25), this.rotateLocX, this.rotateLocY),
+				AffineTransform.getRotateInstance(Math.toRadians(0), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
 		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
 		

@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.04r2";
+	static final String VERSION = "a12.07r3";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static int width, height, panelWidth, panelHeight;
 
@@ -27,14 +27,14 @@ public class Game {
 	static boolean debug = false;
 	static int fps, tps = 60, curTps;
 	static int mouseX, mouseY, tpLocX, tpLocY;
-	
+
 	static JPanel gamePanel;
 	static JFrame frame;
 	static Handler gameController;
 	static boolean running;
 	static Random random = new Random();
 	static Player player;
-	
+
 	// Game Constants
 	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
@@ -58,9 +58,9 @@ public class Game {
 
 		// Make Game Objects
 		gameController = new Handler();
-		player = new Player(64, 64, TYPE_PLAYER, sprPlayer);
+		player = new Player(64, 64, TYPE_PLAYER, sprPlayer, new Rectangle(8, 8, 16, 16));
 		gameController.add(player);
-		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, 3, 48);
+		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48);
 		gameController.add(test);
 
 		// Start Game
@@ -98,10 +98,10 @@ public class Game {
 	}
 
 	static int[] openLauncher() {
-        JFrame temp = new JFrame(TITLE);
-        temp.setUndecorated( true );
-        temp.setVisible( true );
-        temp.setLocationRelativeTo( null );
+		JFrame temp = new JFrame(TITLE);
+		temp.setUndecorated(true);
+		temp.setVisible(true);
+		temp.setLocationRelativeTo(null);
 		// Resolution Options
 		String[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
 		int returnCode = JOptionPane.showOptionDialog(null,
@@ -109,7 +109,7 @@ public class Game {
 				JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
 		if (returnCode == -1)
 			System.exit(0);
-        temp.dispose();
+		temp.dispose();
 		// LOL, String to Int for the resolution selection
 		return new int[] { Integer.parseInt(options[returnCode].split("x")[0]),
 				Integer.parseInt(options[returnCode].split("x")[1].split(" ")[0]) };
@@ -156,7 +156,6 @@ public class Game {
 			@Override
 			public void mousePressed(MouseEvent mouse) {
 				int m = mouse.getButton();
-				int xCoor = mouse.getX(), yCoor = mouse.getY();
 				if (m == MouseEvent.BUTTON3)
 					player.tpPrep = true;
 			}
@@ -182,6 +181,7 @@ public class Game {
 					tpLocX = xCoor;
 					tpLocY = yCoor;
 				}
+				player.tpPrep = false;
 			}
 		});
 
