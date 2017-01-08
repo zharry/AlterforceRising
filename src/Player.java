@@ -58,7 +58,12 @@ public class Player extends GameObject {
 					// enemies
 					ArrayList<GameObject> toDmg = Game.gameController
 							.isCollidingRaySprite(new Line2D.Float(this.p2xTP, this.p2yTP, this.p1xTP, this.p1yTP));
-					// toDmg.remove(this);
+					for (GameObject obj : toDmg) {
+						if (obj.type == Game.TYPE_ENEMY) {
+							Enemy temp = (Enemy) obj;
+							temp.health /= 2;
+						}
+					}
 					System.out.println(toDmg);
 					break;
 				}
