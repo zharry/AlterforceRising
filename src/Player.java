@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -14,14 +15,14 @@ public class Player extends GameObject {
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
 	int moveDist = 2;
+	int p1x, p1y, p2x, p2y, p3x, p3y;
 	int colBoxOffsetX, colBoxOffsetY;
 
 	// Ability Variables
 	boolean tpPrep, goTp = false;
-	int tpXi, tpYi, tpStep, tpDist, tpMoveDist = 64;
-	int p1x, p1y, p2x, p2y, p3x, p3y;
+	int tpXi, tpYi, tpLocX, tpLocY, tpStep, tpDist, tpMoveDist = 64;
+	int p1xTP, p1yTP, p2xTP, p2yTP;
 	double tpDX, tpDY;
-	ArrayList<GameObject> tpDamaged = new ArrayList<GameObject>();
 	int tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps; // All measured in
 																// ticks
 	// Knockback Variables
@@ -53,7 +54,12 @@ public class Player extends GameObject {
 					this.tpStep++;
 				else {
 					this.goTp = false;
-					this.tpDamaged.removeAll(this.tpDamaged);
+					// Once the TP is over, apply the damage to all intersecting
+					// enemies
+					ArrayList<GameObject> toDmg = Game.gameController
+							.isCollidingRaySprite(new Line2D.Float(this.p2xTP, this.p2yTP, this.p1xTP, this.p1yTP));
+					// toDmg.remove(this);
+					System.out.println(toDmg);
 					break;
 				}
 			this.x = (int) (this.tpXi + tpDX * this.tpStep);
@@ -83,12 +89,7 @@ public class Player extends GameObject {
 		for (GameObject obj : inCollisionWith) {
 			if (obj.type == Game.TYPE_ENEMY) {
 				Enemy enemy = (Enemy) obj;
-				if (this.goTp) {
-					if (!this.tpDamaged.contains(obj)) {
-						enemy.health /= 2;
-						this.tpDamaged.add(obj);
-					}
-				} else {
+				if (!this.goTp) {
 					this.health -= enemy.damage;
 					this.setKnockback(enemy.knockback, enemy.x, enemy.y);
 				}
@@ -98,7 +99,7 @@ public class Player extends GameObject {
 		// Move the player moveDist pixels in that direction
 		this.x += this.velX;
 		this.y += this.velY;
-		
+
 		// Move the collision box aswell
 		this.colBox.x = this.x + this.colBoxOffsetX;
 		this.colBox.y = this.y + this.colBoxOffsetY;
@@ -128,10 +129,14 @@ public class Player extends GameObject {
 		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
 		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
 				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
-		AffineTransformOp op = new AffineTransformOp(
-				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
+		AffineTransformOp op = new AffineTransformOp(AffineTransform
+				.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
-		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
+		if (Game.mouseX == this.x && Game.mouseY == this.y) {
+			g.drawImage(this.sprite, this.x, this.y, null);
+		} else {
+			g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
+		}
 		if (this.underKnockback) {
 			g.setColor(new Color(255, 0, 0, 128));
 			g.fillOval(this.x, this.y, 32, 32);
@@ -176,12 +181,18 @@ public class Player extends GameObject {
 
 	public void setTp(int x, int y) {
 		if (this.tpCooldownTimer == 0) {
+			this.p2xTP = p2x;
+			this.p2yTP = p2y;
+			this.p1xTP = p1x;
+			this.p1yTP = p1y;
 			this.tpPrep = false;
 			this.underKnockback = false;
 			this.tpCooldownTimer = this.tpCooldownAmount;
 			this.goTp = true;
 			this.tpXi = this.x;
 			this.tpYi = this.y;
+			this.tpLocX = x;
+			this.tpLocY = y;
 			this.tpStep = 1;
 			this.tpDist = (int) (Math.sqrt((x - this.tpXi) * (x - this.tpXi) + (y - this.tpYi) * (y - this.tpYi)));
 			this.tpDX = (x - this.tpXi) / ((double) this.tpDist);
@@ -199,7 +210,7 @@ public class Player extends GameObject {
 				: Math.round(velY));
 		this.kbStep = kb / this.knockbackPerFrame;
 	}
-	
+
 	public void canelAbilities() {
 		this.tpPrep = false;
 	}

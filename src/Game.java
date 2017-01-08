@@ -19,14 +19,14 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.07r3";
+	static final String VERSION = "a12.08r2";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static int width, height, panelWidth, panelHeight;
 
 	// Game Variables
 	static boolean debug = false;
 	static int fps, tps = 60, curTps;
-	static int mouseX, mouseY, tpLocX, tpLocY;
+	static int mouseX, mouseY;
 
 	static JPanel gamePanel;
 	static JFrame frame;
@@ -94,6 +94,7 @@ public class Game {
 				if (debug)
 					Debug.debugConsole();
 			}
+			Thread.sleep(1);
 		}
 	}
 
@@ -176,11 +177,8 @@ public class Game {
 			public void mouseReleased(MouseEvent mouse) {
 				int m = mouse.getButton();
 				int xCoor = mouse.getX(), yCoor = mouse.getY();
-				if (m == MouseEvent.BUTTON3 && player.tpPrep) {
+				if (m == MouseEvent.BUTTON3 && player.tpPrep)
 					player.setTp(xCoor, yCoor);
-					tpLocX = xCoor;
-					tpLocY = yCoor;
-				}
 				player.tpPrep = false;
 			}
 		});

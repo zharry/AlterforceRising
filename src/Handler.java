@@ -1,4 +1,6 @@
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class Handler {
@@ -6,7 +8,7 @@ public class Handler {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
-	public void tick() {
+	public synchronized void tick() {
 		for (GameObject object : gameObjects)
 			object.tick();
 		while (!toRemove.isEmpty()) {
@@ -15,7 +17,7 @@ public class Handler {
 		}
 	}
 
-	public void render(Graphics g) {
+	public synchronized void render(Graphics g) {
 		for (GameObject object : gameObjects)
 			if (object.type != Game.TYPE_PLAYER)
 				object.render(g);
@@ -33,21 +35,22 @@ public class Handler {
 
 	public ArrayList<GameObject> isColliding(GameObject obj) {
 		ArrayList<GameObject> col = new ArrayList<GameObject>();
-		for (GameObject obj1 : gameObjects) {
+		for (GameObject obj1 : gameObjects)
 			if (obj1 != obj)
 				if (obj1.colBox.intersects(obj.colBox))
 					col.add(obj1);
-		}
 		return col;
 	}
-	
-	/**
-	 * @param obj
-	 *            Target object to check if it's sprite colliding with any other object's sprite
-	 * @return An array of all objects that obj has collided with
-	 * @author java.awt.Rectangle.intersects(Rectangle r)
-	 */
-	public ArrayList<GameObject> isSpriteColliding(GameObject obj) {
+
+	public ArrayList<GameObject> isCollidingRay(Line2D l) {
+		ArrayList<GameObject> col = new ArrayList<GameObject>();
+		for (GameObject obj1 : gameObjects)
+			if (l.intersects(obj1.colBox))
+				col.add(obj1);
+		return col;
+	}
+
+	public ArrayList<GameObject> isCollidingSprite(GameObject obj) {
 		ArrayList<GameObject> col = new ArrayList<GameObject>();
 		for (GameObject obj1 : gameObjects) {
 			int tw = obj.sprite.getWidth();
@@ -67,6 +70,17 @@ public class Handler {
 					if (obj1 != obj)
 						col.add(obj1);
 			}
+		}
+		return col;
+	}
+
+	public ArrayList<GameObject> isCollidingRaySprite(Line2D l) {
+		ArrayList<GameObject> col = new ArrayList<GameObject>();
+		for (GameObject obj1 : gameObjects) {
+			Rectangle spriteBoundingBox = new Rectangle(obj1.x, obj1.y, obj1.sprite.getWidth(),
+					obj1.sprite.getHeight());
+			if (l.intersects(spriteBoundingBox))
+				col.add(obj1);
 		}
 		return col;
 	}

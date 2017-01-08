@@ -50,20 +50,6 @@ public abstract class GameObject {
 
 	public abstract void render(Graphics g);
 	
-	public void drawColBox(Graphics g) {
-		// Add transparency and border width
-		Graphics2D g2d = (Graphics2D) g;
-		Stroke origStroke = g2d.getStroke();
-		g2d.setStroke(new BasicStroke(3));
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
-		// Draw Collision Boxes
-		g.setColor(Color.magenta);
-		g.drawRect(this.colBox.x, this.colBox.y, this.colBox.width, this.colBox.height);
-		// Reset Graphics to original
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-		g2d.setStroke(origStroke);
-	}
-	
 	// Overload clamp to allow for double and int arguments
 	public double clamp(double i, double min, double max) {
 		return i < min ? min : i > max ? max : i;
