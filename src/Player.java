@@ -64,7 +64,6 @@ public class Player extends GameObject {
 							temp.health /= 2;
 						}
 					}
-					System.out.println(toDmg);
 					break;
 				}
 			this.x = (int) (this.tpXi + tpDX * this.tpStep);
