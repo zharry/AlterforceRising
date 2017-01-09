@@ -16,7 +16,7 @@ public class Player extends GameObject {
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
 	int moveDist = 2;
 	int p1x, p1y, p2x, p2y, p3x, p3y;
-	int colBoxOffsetX, colBoxOffsetY;
+
 
 	// Ability Variables
 	boolean tpPrep, goTp = false;
@@ -35,8 +35,6 @@ public class Player extends GameObject {
 
 	public Player(int x, int y, int type, BufferedImage img, Rectangle colBox) {
 		super(x, y, type, img, colBox);
-		this.colBoxOffsetX = colBox.x - x;
-		this.colBoxOffsetY = colBox.y - y;
 	}
 
 	@Override
@@ -104,6 +102,12 @@ public class Player extends GameObject {
 		this.x += this.velX;
 		this.y += this.velY;
 
+		// Make sure none of the values exceed the max and min for the game
+		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
+		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
+		this.health = clamp(this.health, 0, this.maxHealth);
+		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
+
 		// Move the collision box aswell
 		this.colBox.x = this.x + this.colBoxOffsetX;
 		this.colBox.y = this.y + this.colBoxOffsetY;
@@ -111,12 +115,6 @@ public class Player extends GameObject {
 			this.colBox.x = (int) (this.tpXi + tpDX * this.tpStep);
 			this.colBox.y = (int) (this.tpYi + tpDY * this.tpStep);
 		}
-
-		// Make sure none of the values exceed the max and min for the game
-		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
-		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
-		this.health = clamp(this.health, 0, this.maxHealth);
-		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
 	}
 
 	@Override

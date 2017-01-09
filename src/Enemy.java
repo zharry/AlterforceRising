@@ -22,11 +22,16 @@ public class Enemy extends GameObject {
 	@Override
 	public void tick() {
 		// Move this object to Game.player
-
+		
+		
 		// Make sure none of the values exceed the max and min for the game
 		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
 		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
 		this.health = clamp(this.health, 0, this.maxHealth);
+
+		// Move the collision box aswell
+		this.colBox.x = this.x + this.colBoxOffsetX;
+		this.colBox.y = this.y + this.colBoxOffsetY;
 		
 		if (this.health == 0) {
 			Game.gameController.toRemove.add(this);
