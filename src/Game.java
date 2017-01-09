@@ -25,7 +25,7 @@ public class Game {
 
 	// Game Variables
 	static boolean debug = false;
-	static int fps, tps = 60, curTps;
+	static int fps, fpsProc = 0, tps = 60, curTps;
 	static int mouseX, mouseY;
 
 	static JPanel gamePanel;
@@ -70,7 +70,7 @@ public class Game {
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
 		double ns = 1000000000 / (double) tps, delta = 0;
-		int fpsProc = 0, tpsProc = 0;
+		int tpsProc = 0;
 		while (running) {
 			long curTime = System.nanoTime();
 			delta += (curTime - lastTime) / ns;
@@ -84,7 +84,6 @@ public class Game {
 			// Update the Graphics
 			gamePanel.repaint();
 			// Display FPS and TPS
-			fpsProc++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				fps = fpsProc;
@@ -136,6 +135,7 @@ public class Game {
 				gameController.render(g);
 				if (debug)
 					Debug.drawDebug(g);
+				fpsProc++;
 			}
 		};
 
