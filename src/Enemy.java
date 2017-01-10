@@ -22,7 +22,15 @@ public class Enemy extends GameObject {
 	@Override
 	public void tick() {
 		// Move this object to Game.player
+		int x_change = this.x - Game.player.x;
+		int y_change = this.y - Game.player.y; 
+		x_change = (x_change == 0 ? 1 : x_change);
+		y_change = (y_change == 0 ? 1 : y_change);
+		this.velX = (x_change < 0 ? 1 : (x_change == 0 ? 0 : -1));
+		this.velY = (y_change < 0 ? 1 : (y_change == 0 ? 0 : -1));
 		
+		this.x += this.velX;
+		this.y += this.velY;
 		
 		// Make sure none of the values exceed the max and min for the game
 		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
