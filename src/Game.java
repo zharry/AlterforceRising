@@ -60,7 +60,7 @@ public class Game {
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer, new Rectangle(8, 8, 16, 16));
 		gameController.add(player);
-		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48);
+		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1);
 		gameController.add(test);
 
 		// Start Game
