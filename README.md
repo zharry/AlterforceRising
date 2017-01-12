@@ -9,7 +9,7 @@ Grade 11, Computer Science Summative. This game is based around the mechanic of 
 	- Release to teleport to indicated location
 3. Press F3 to toggle debug displays
 
-## How to use F# debug display
+## How to use F3 debug display
 - The text in the top right is a just a display of the ingame variables
 - The Pink boxes represents the bounding box of the sprite
 - The Magenta boxes represents the collision box of that object
@@ -24,5 +24,6 @@ Grade 11, Computer Science Summative. This game is based around the mechanic of 
 
 #### Location
 - The x and y should always be located at the object's top left corner
+
 #### Rotation
 - The rotation should always happen about the center point of the object
