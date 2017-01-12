@@ -200,7 +200,7 @@ public class Player extends GameObject {
 			g.drawImage(op.filter(this.sprite, null), Game.mouseX, Game.mouseY, null);
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
-	}
+	} 
 
 	public void primaryFire() {
 		Game.gameController.add(new Projectile(this.x + 8, this.y + 8, Game.TYPE_FRIENDLYPROJECTILE,
