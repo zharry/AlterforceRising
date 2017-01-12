@@ -7,8 +7,7 @@ public abstract class GameObject {
 	int x, y, velX, velY;
 	int type;
 	double rotateDegs;
-	BufferedImage sprite;
-	double rotateLocX, rotateLocY;
+	BufferedImage[] sprite;
 
 	/*
 	 * Collision Box, in the GameObject constructor a. If no colBox is passed,
@@ -19,36 +18,66 @@ public abstract class GameObject {
 	 */
 	Rectangle colBox;
 	int colBoxOffsetX, colBoxOffsetY;
-	
-	public GameObject(int x, int y, int type, BufferedImage img) {
+
+	public GameObject(int x, int y, int type, BufferedImage[] sprite) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
-		this.sprite = img;
-		this.rotateLocX = img.getWidth(null) / 2;
-		this.rotateLocY = img.getHeight(null) / 2;
 		this.colBox = new Rectangle(-10, -10, 1, 1);
 		this.colBoxOffsetX = colBox.x - x;
 		this.colBoxOffsetY = colBox.y - y;
+		this.sprite = sprite;
 	}
 
-	public GameObject(int x, int y, int type, BufferedImage img, Rectangle colBox) {
+	public GameObject(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
-		this.sprite = img;
-		this.rotateLocX = img.getWidth(null) / 2;
-		this.rotateLocY = img.getHeight(null) / 2;
 		this.colBox = colBox;
 		this.colBox.x += x;
 		this.colBox.y += y;
 		this.colBoxOffsetX = colBox.x - x;
 		this.colBoxOffsetY = colBox.y - y;
+		this.sprite = sprite;
 	}
 
 	public abstract void tick();
 
 	public abstract void render(Graphics g);
+
+	public abstract void tryDespawn();
+
+	public void move() {
+		move(true);
+	}
+
+	/**
+	 * @param clamp
+	 *            If True, move GameObject without clamping
+	 */
+	public void move(boolean clamp) {
+		this.x += this.velX;
+		this.y += this.velY;
+		if (clamp) {
+			// TO-DO CHANGE CLAMPING TO USE COLLISION BOX INSTEAD OF SPRITE BOX
+			this.x = clamp(this.x, 0, Game.panelWidth - this.sprite[0].getWidth());
+			this.y = clamp(this.y, 0, Game.panelHeight - this.sprite[0].getHeight());
+		}
+		moveColBox();
+	}
+
+	public void moveColBox() {
+		this.colBox.x = this.x + this.colBoxOffsetX;
+		this.colBox.y = this.y + this.colBoxOffsetY;
+		// Ensure that the player's Collision box moves during TP
+		if (this.type == Game.TYPE_PLAYER) {
+			Player player = (Player) this;
+			if (player.goTp) {
+				player.colBox.x = (int) (player.tpXi + player.tpDX * player.tpStep);
+				player.colBox.y = (int) (player.tpYi + player.tpDY * player.tpStep);
+			}
+		}
+	}
 
 	// Overload clamp to allow for double and int arguments
 	public double clamp(double i, double min, double max) {

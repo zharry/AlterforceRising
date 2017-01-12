@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Random;
@@ -42,9 +44,9 @@ public class Game {
 	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
 	// Game Sprites
-	static BufferedImage sprPlayer, sprAssassin1;
+	static BufferedImage[] sprPlayer = new BufferedImage[360], sprAssassin1 = new BufferedImage[360];
+	static BufferedImage[] sprProjectile1 = new BufferedImage[360];
 	static BufferedImage sprTPIcon, sprPFIcon;
-	static BufferedImage sprProjectile1;
 
 	public static void main(String[] args) throws Exception {
 
@@ -54,16 +56,37 @@ public class Game {
 		height = resolution[1];
 
 		// Initialize Sprites
-		sprPlayer = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Player.png"));
-		sprAssassin1 = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Assassin1.png"));
+		sprPlayer[0] = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Player.png"));
+		sprAssassin1[0] = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Assassin1.png"));
+
+		sprProjectile1[0] = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
+
 		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
 		sprPFIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/PFIcon.png"));
-		sprProjectile1 = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
+
+		// Create Sprite Rotations
+		AffineTransformOp op;
+		for (int i = 1; i < 360; i++) {
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprPlayer[0].getWidth() / 2,
+					sprPlayer[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
+			sprPlayer[i] = op.filter(sprPlayer[0], null);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprAssassin1[0].getWidth() / 2, sprAssassin1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
+			sprAssassin1[i] = op.filter(sprAssassin1[0], null);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprProjectile1[0].getWidth() / 2, sprProjectile1[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprProjectile1[i] = op.filter(sprProjectile1[0], null);
+		}
 
 		// Make Game Objects
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer, new Rectangle(8, 8, 16, 16));
 		gameController.add(player);
+		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1);
+		gameController.add(test);
 
 		// Start Game
 		running = true;

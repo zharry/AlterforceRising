@@ -46,7 +46,7 @@ public class Debug {
 		for (GameObject obj : Game.gameController.gameObjects) {
 			// Draw Sprite Bounding Boxes
 			g.setColor(Color.pink);
-			g.drawRect(obj.x, obj.y, obj.sprite.getWidth(), obj.sprite.getHeight());
+			g.drawRect(obj.x, obj.y, obj.sprite[0].getWidth(), obj.sprite[0].getHeight());
 		}
 		// Reset Graphics to original
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));

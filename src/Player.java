@@ -4,9 +4,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -36,8 +34,8 @@ public class Player extends GameObject {
 	double health = 100, maxHealth = 100;
 	double healthRegen = 0.15;
 
-	public Player(int x, int y, int type, BufferedImage img, Rectangle colBox) {
-		super(x, y, type, img, colBox);
+	public Player(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox) {
+		super(x, y, type, sprite, colBox);
 	}
 
 	@Override
@@ -48,6 +46,7 @@ public class Player extends GameObject {
 		// Reset Player Velocity
 		this.velX = 0;
 		this.velY = 0;
+		// Determine Player Velocity
 		if (this.goTp) {
 			// TP the player tpMoveDist amount forward for this tick
 			for (int i = 0; i < this.tpMoveDist; i++)
@@ -101,46 +100,32 @@ public class Player extends GameObject {
 			}
 		}
 
-		// Move the player moveDist pixels in that direction
-		this.x += this.velX;
-		this.y += this.velY;
-
-		// Make sure none of the values exceed the max and min for the game
-		this.x = clamp(this.x, 0, Game.panelWidth - this.sprite.getWidth());
-		this.y = clamp(this.y, 0, Game.panelHeight - this.sprite.getHeight());
+		// Clamp Variables and Move
 		this.health = clamp(this.health, 0, this.maxHealth);
 		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
+		move();
+		tryDespawn();
 
-		// Move the collision box aswell
-		this.colBox.x = this.x + this.colBoxOffsetX;
-		this.colBox.y = this.y + this.colBoxOffsetY;
-		if (this.goTp) {
-			this.colBox.x = (int) (this.tpXi + tpDX * this.tpStep);
-			this.colBox.y = (int) (this.tpYi + tpDY * this.tpStep);
-		}
 	}
 
 	@Override
 	public void render(Graphics g) {
 		// Draw Game Object
-		this.p1x = (int) (this.x + this.rotateLocX);
-		this.p1y = (int) (this.y + this.rotateLocY);
-		this.p2x = (int) (Game.mouseX + this.rotateLocX);
-		this.p2y = (int) (Game.mouseY + this.rotateLocY);
-		this.p3x = (int) (this.x + this.rotateLocX);
+		this.p1x = (int) (this.x + this.sprite[0].getWidth() / 2);
+		this.p1y = (int) (this.y + this.sprite[0].getHeight() / 2);
+		this.p2x = (int) (Game.mouseX + this.sprite[0].getWidth() / 2);
+		this.p2y = (int) (Game.mouseY + this.sprite[0].getHeight() / 2);
+		this.p3x = (int) (this.x + this.sprite[0].getWidth() / 2);
 		this.p3y = -1;
 		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
 		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
 		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
 				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
-		AffineTransformOp op = new AffineTransformOp(
-				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
-				AffineTransformOp.TYPE_BILINEAR);
 		if (Game.mouseX == this.x && Game.mouseY == this.y) {
-			g.drawImage(this.sprite, this.x, this.y, null);
+			g.drawImage(Game.sprPlayer[0], this.x, this.y, null);
 		} else {
-			g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
+			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], this.x, this.y, null);
 		}
 		if (this.underKnockback) {
 			g.setColor(new Color(255, 0, 0, 128));
@@ -197,10 +182,14 @@ public class Player extends GameObject {
 		if (this.tpCooldownTimer == 0 && this.tpPrep) {
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-			g.drawImage(op.filter(this.sprite, null), Game.mouseX, Game.mouseY, null);
+			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], Game.mouseX, Game.mouseY, null);
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
-	} 
+	}
+
+	@Override
+	public void tryDespawn() {
+	}
 
 	public void primaryFire() {
 		Game.gameController.add(new Projectile(this.x + 8, this.y + 8, Game.TYPE_FRIENDLYPROJECTILE,
