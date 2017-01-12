@@ -21,6 +21,7 @@ Grade 11, Computer Science Summative. This game is based around the mechanic of 
 - Time: Ticks
 - Distance: Pixels
 - Angles: Degrees
+
 #### Location
 - The x and y should always be located at the object's top left corner
 #### Rotation
