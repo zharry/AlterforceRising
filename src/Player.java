@@ -17,6 +17,9 @@ public class Player extends GameObject {
 	int moveDist = 2;
 	int p1x, p1y, p2x, p2y, p3x, p3y;
 
+	// Primary Fire Variables
+	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.5 * Game.tps);
+	int pfTimeAlive = 2 * Game.tps;
 
 	// Ability Variables
 	boolean tpPrep, goTp = false;
@@ -156,19 +159,37 @@ public class Player extends GameObject {
 		g.drawString("Health: " + Math.round(this.health * 10) / 10.0 + "/" + this.maxHealth, 20,
 				Game.panelHeight - 45);
 		g.drawString("Health Regen: " + this.healthRegen, 20, Game.panelHeight - 58);
-		// TP Cooldown Indicator
-		g.setColor(Color.cyan);
+		
+		// PF Cooldown Indicator
+		g.setColor(Color.white);
 		g.fillRect(150, Game.panelHeight - 55, 35, 35);
-		g.drawImage(Game.sprTPIcon, 150, Game.panelHeight - 55, null);
+		g.drawImage(Game.sprPFIcon, 150, Game.panelHeight - 55, null);
 		g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-		g.fillRect(150, Game.panelHeight - 55, 35, (int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
+		g.fillRect(150, Game.panelHeight - 55, 35, (int) (this.pfCooldownTimer / (double) this.pfCooldownAmount * 35));
 		g.setColor(Color.black);
 		g.drawRect(150, Game.panelHeight - 55, 35, 35);
+		if (this.pfCooldownTimer > 0) {
+			Font orig = g.getFont();
+			g.setColor(Color.black);
+			g.setFont(new Font("default", Font.BOLD, 14));
+			g.drawString(Math.round((this.pfCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 159,
+					Game.panelHeight - 33);
+			g.setFont(orig);
+		}
+		
+		// TP Cooldown Indicator
+		g.setColor(Color.cyan);
+		g.fillRect(200, Game.panelHeight - 55, 35, 35);
+		g.drawImage(Game.sprTPIcon, 200, Game.panelHeight - 55, null);
+		g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
+		g.fillRect(200, Game.panelHeight - 55, 35, (int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
+		g.setColor(Color.black);
+		g.drawRect(200, Game.panelHeight - 55, 35, 35);
 		if (this.tpCooldownTimer > 0) {
 			Font orig = g.getFont();
 			g.setColor(Color.black);
 			g.setFont(new Font("default", Font.BOLD, 14));
-			g.drawString(Math.round((this.tpCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 159,
+			g.drawString(Math.round((this.tpCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 200 + 9,
 					Game.panelHeight - 33);
 			g.setFont(orig);
 		}
@@ -179,6 +200,10 @@ public class Player extends GameObject {
 			g.drawImage(op.filter(this.sprite, null), Game.mouseX, Game.mouseY, null);
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
+	}
+	
+	public void primaryFire() {
+		Game.gameController.add(new Projectile(this.x + 8, this.y + 8, Game.TYPE_FRIENDLYPROJECTILE, Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY, 6,  this.pfTimeAlive));		
 	}
 
 	public void setTp(int x, int y) {

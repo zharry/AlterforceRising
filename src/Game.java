@@ -39,10 +39,12 @@ public class Game {
 	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
 	static final int TYPE_ENEMY = 396863;
+	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
 	// Game Sprites
 	static BufferedImage sprPlayer, sprAssassin1;
-	static BufferedImage sprTPIcon;
+	static BufferedImage sprTPIcon, sprPFIcon;
+	static BufferedImage sprProjectile1;
 
 	public static void main(String[] args) throws Exception {
 
@@ -55,13 +57,15 @@ public class Game {
 		sprPlayer = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Player.png"));
 		sprAssassin1 = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Assassin1.png"));
 		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
+		sprPFIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/PFIcon.png"));
+		sprProjectile1 = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
 
 		// Make Game Objects
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer, new Rectangle(8, 8, 16, 16));
 		gameController.add(player);
-		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1);
-		gameController.add(test);
+		//Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48);
+		//gameController.add(test);
 
 		// Start Game
 		running = true;
@@ -159,6 +163,8 @@ public class Game {
 				int m = mouse.getButton();
 				if (m == MouseEvent.BUTTON3)
 					player.tpPrep = true;
+				else if (m == MouseEvent.BUTTON1)
+					player.primaryFire();
 			}
 
 			@Override
