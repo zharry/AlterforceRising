@@ -33,32 +33,24 @@ public class Debug {
 		g.drawLine(Game.player.p2xTP, Game.player.p2yTP, Game.player.p1xTP, Game.player.p1yTP);
 		
 		// Draw Debug Collision Boxes
+		Graphics2D g2d = (Graphics2D) g;
+		Stroke origStroke = g2d.getStroke();
+		// Add transparency and border width
+		g2d.setStroke(new BasicStroke(3));
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
 		for (GameObject obj : Game.gameController.gameObjects) {
-			// Add transparency and border width
-			Graphics2D g2d = (Graphics2D) g;
-			Stroke origStroke = g2d.getStroke();
-			g2d.setStroke(new BasicStroke(3));
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.75f));
 			// Draw Collision Boxes
 			g.setColor(Color.magenta);
 			g.drawRect(obj.colBox.x, obj.colBox.y, obj.colBox.width, obj.colBox.height);
-			// Reset Graphics to original
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(origStroke);
 		}
 		for (GameObject obj : Game.gameController.gameObjects) {
-			// Add transparency and border width
-			Graphics2D g2d = (Graphics2D) g;
-			Stroke origStroke = g2d.getStroke();
-			g2d.setStroke(new BasicStroke(3));
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.725f));
 			// Draw Sprite Bounding Boxes
 			g.setColor(Color.pink);
 			g.drawRect(obj.x, obj.y, obj.sprite.getWidth(), obj.sprite.getHeight());
-			// Reset Graphics to original
-			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-			g2d.setStroke(origStroke);
 		}
+		// Reset Graphics to original
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		g2d.setStroke(origStroke);
 	}
 
 	static void debugConsole() {

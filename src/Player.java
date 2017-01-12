@@ -19,7 +19,7 @@ public class Player extends GameObject {
 
 	// Primary Fire Variables
 	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.5 * Game.tps);
-	int pfTimeAlive = 2 * Game.tps;
+	int pfProjSpeed = 6, pfTimeAlive = 2 * Game.tps;
 
 	// Ability Variables
 	boolean tpPrep, goTp = false;
@@ -134,8 +134,8 @@ public class Player extends GameObject {
 		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
 		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
 				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
-		AffineTransformOp op = new AffineTransformOp(AffineTransform
-				.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
+		AffineTransformOp op = new AffineTransformOp(
+				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
 		if (Game.mouseX == this.x && Game.mouseY == this.y) {
 			g.drawImage(this.sprite, this.x, this.y, null);
@@ -159,7 +159,7 @@ public class Player extends GameObject {
 		g.drawString("Health: " + Math.round(this.health * 10) / 10.0 + "/" + this.maxHealth, 20,
 				Game.panelHeight - 45);
 		g.drawString("Health Regen: " + this.healthRegen, 20, Game.panelHeight - 58);
-		
+
 		// PF Cooldown Indicator
 		g.setColor(Color.white);
 		g.fillRect(150, Game.panelHeight - 55, 35, 35);
@@ -176,7 +176,7 @@ public class Player extends GameObject {
 					Game.panelHeight - 33);
 			g.setFont(orig);
 		}
-		
+
 		// TP Cooldown Indicator
 		g.setColor(Color.cyan);
 		g.fillRect(200, Game.panelHeight - 55, 35, 35);
@@ -201,9 +201,10 @@ public class Player extends GameObject {
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
 	}
-	
+
 	public void primaryFire() {
-		Game.gameController.add(new Projectile(this.x + 8, this.y + 8, Game.TYPE_FRIENDLYPROJECTILE, Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY, 6,  this.pfTimeAlive));		
+		Game.gameController.add(new Projectile(this.x + 8, this.y + 8, Game.TYPE_FRIENDLYPROJECTILE,
+				Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY, pfProjSpeed, this.pfTimeAlive));
 	}
 
 	public void setTp(int x, int y) {

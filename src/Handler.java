@@ -9,9 +9,6 @@ public class Handler {
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
 	public synchronized void tick() {
-		if (Game.random.nextInt(60) == 30) {
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48));
-		}
 		for (GameObject object : gameObjects)
 			object.tick();
 		while (!toRemove.isEmpty()) {

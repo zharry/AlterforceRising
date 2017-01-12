@@ -9,6 +9,17 @@ public class Projectile extends GameObject {
 	// Alive Time
 	int timeAlive;
 
+	/**
+	 * @param x X Location
+	 * @param y Y Location
+	 * @param type Projectile Type
+	 * @param img BufferedImage sprite
+	 * @param degs Rotation of the Projectile
+	 * @param x2 Destination X Location
+	 * @param y2 Destination Y Location
+	 * @param speed Velocity of the Projectile
+	 * @param alive Time before projectile despawns
+	 */
 	public Projectile(int x, int y, int type, BufferedImage img, double degs, int x2, int y2, int speed, int alive) {
 		super(x, y, type, img, new Rectangle(6, 6, 4, 4));
 		this.rotateDegs = degs;
@@ -22,6 +33,7 @@ public class Projectile extends GameObject {
 
 	@Override
 	public void tick() {
+		// Slowly run the despawn timer
 		this.timeAlive--;
 		
 		// Move
@@ -32,6 +44,7 @@ public class Projectile extends GameObject {
 		this.colBox.x = this.x + this.colBoxOffsetX;
 		this.colBox.y = this.y + this.colBoxOffsetY;
 		
+		// Despawn Instance after it dies
 		if (this.timeAlive < 0) {
 			Game.gameController.toRemove.add(this);
 		}
@@ -43,7 +56,6 @@ public class Projectile extends GameObject {
 				AffineTransform.getRotateInstance(Math.toRadians(this.rotateDegs), this.rotateLocX, this.rotateLocY),
 				AffineTransformOp.TYPE_BILINEAR);
 		g.drawImage(op.filter(this.sprite, null), this.x, this.y, null);
-
 	}
 
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Enemy extends GameObject {
 
 	// Attack Variables
-	int damage, knockback; // Knockback Measured in pixels
+	int damage, knockback; 
 	int moveDist;
 	
 	// Health Variables
