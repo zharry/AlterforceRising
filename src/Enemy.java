@@ -13,8 +13,15 @@ public class Enemy extends GameObject {
 	// Health Variables
 	double health = 100, maxHealth = 100;
 
-	public Enemy(int x, int y, int type) {
+	public Enemy(int x, int y, int type, int subtype) {
 		super(x, y, type);
+		if (subtype == Game.SUCKDIC) {
+			this.sprite = Game.sprProjectile1;
+			this.colBox = new Rectangle(8,8,16,16);
+			this.damage = 5;
+			this.knockback = 8;
+			this.moveDist = 7;
+		}
 	}
 	
 	public Enemy(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox, double damage, double knockback,
@@ -64,7 +71,7 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(Game.sprAssassin1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x),
+		g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x),
 				(int) Math.round(this.y), null);
 
 		// Draw Healthbar Elements

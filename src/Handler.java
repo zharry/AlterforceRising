@@ -10,19 +10,22 @@ public class Handler {
 
 	public void tick() {
 		if (Game.random.nextInt(1000) == 1) {
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1));
+			//this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1));
 		}
 		if (Game.random.nextInt(1000) == 1){
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprPlayer, new Rectangle(8, 8, 16, 16), 1, 48, 2));
+			//this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprPlayer, new Rectangle(8, 8, 16, 16), 1, 48, 2));
 		}
 		if (Game.random.nextInt(1000) == 1){
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, -24, 16, 80), 0, 200, 1));
+			//this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, -24, 16, 80), 0, 200, 1));
 		}
 		if (Game.random.nextInt(1000) == 1){
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(-24, 8, 80, 16), 0, 200, 1));
+			//this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(-24, 8, 80, 16), 0, 200, 1));
 		}
-		if (Game.random.nextInt(100) == 1){
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 0, 20, 5));
+		if (Game.random.nextInt(1000) == 1){
+			//this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 0, 20, 5));
+		}
+		if (Game.random.nextInt(500) == 1){
+			//this.add(new GameObject(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), 5));
 		}
 		
 		for (GameObject object : gameObjects)

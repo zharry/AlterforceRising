@@ -18,12 +18,11 @@ public abstract class GameObject {
 	 */
 	Rectangle colBox;
 	int colBoxOffsetX, colBoxOffsetY;
-	
+
 	public GameObject(int x, int y, int type) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
-		Enemy test = (Enemy) this;
 	}
 
 	public GameObject(int x, int y, int type, BufferedImage[] sprite) {
@@ -93,5 +92,5 @@ public abstract class GameObject {
 	public double noNaN(double i) {
 		return i == 0 ? 1 : i;
 	}
-	
+
 }
