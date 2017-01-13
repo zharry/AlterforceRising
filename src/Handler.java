@@ -8,7 +8,23 @@ public class Handler {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
-	public void tick() {
+	public synchronized void tick() {
+		/*if (Game.random.nextInt(1000) == -30) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1));
+		}
+		if (Game.random.nextInt(5000) == -1){
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprPlayer, new Rectangle(8, 8, 16, 16), 1, 48, 2));
+		}
+		if (Game.random.nextInt(100) == -1){
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, -24, 16, 80), 0, 200, 1));
+		}
+		if (Game.random.nextInt(100) == -1){
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(-24, 8, 80, 16), 0, 200, 1));
+		}
+		if (Game.random.nextInt(100) == 1){
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.sprAssassin1, new Rectangle(8, 8, 16, 16), 0, 20, 5));
+		}
+		*/
 		for (GameObject object : gameObjects)
 			object.tick();
 		while (!toRemove.isEmpty()) {
@@ -17,7 +33,7 @@ public class Handler {
 		}
 	}
 
-	public void render(Graphics g) {
+	public synchronized void render(Graphics g) {
 		for (GameObject object : gameObjects)
 			if (object.type != Game.TYPE_PLAYER)
 				object.render(g);

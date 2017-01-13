@@ -26,8 +26,9 @@ public class Enemy extends GameObject {
 		// Move this object to Game.player
 		double xChange = this.x - Game.player.x == 0 ? 1 : this.x - Game.player.x,
 				yChange = this.y - Game.player.y == 0 ? 1 : this.y - Game.player.y;
-		this.velX = (xChange < 0 ? 1 : (xChange == 0 ? 0 : -1)) * moveDist;
-		this.velY = (yChange < 0 ? 1 : (yChange == 0 ? 0 : -1)) * moveDist;
+		double totalDist = Math.sqrt(xChange*xChange+yChange*yChange);
+		this.velX = -xChange/noNaN(totalDist)*this.moveDist;
+		this.velY = -yChange/noNaN(totalDist)*this.moveDist;
 
 		// Collision Detection
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
@@ -53,7 +54,7 @@ public class Enemy extends GameObject {
 
 		// Clamp Move and then try to despawn
 		this.health = clamp(this.health, 0, this.maxHealth);
-		// move();
+		move();
 		tryDespawn();
 	}
 
