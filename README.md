@@ -1,3 +1,4 @@
+
 # AlterforceRising
 Grade 11, Computer Science Summative. This game is based around the mechanic of teleportation and developed from there. 
 
@@ -33,3 +34,8 @@ Grade 11, Computer Science Summative. This game is based around the mechanic of 
 - Use ints for timers, counter and offsets
 - Use doubles for everything else
 - Cast doubles to int only when required to, do math in double
+
+#### Assets
+- Projectiles must be 16x16
+- Icons must be 35x35
+- GameObjects can be in any size (32x32 Optimal)

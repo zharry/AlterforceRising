@@ -57,8 +57,8 @@ public class Game {
 		height = resolution[1];
 
 		// Initialize Sprites
-		sprPlayer[0] = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Player.png"));
-		sprAssassin1[0] = ImageIO.read(new File(assetsDir + "GameObjects (32x32)/Assassin1.png"));
+		sprPlayer[0] = ImageIO.read(new File(assetsDir + "GameObjects/Player.png"));
+		sprAssassin1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Assassin1.png"));
 
 		sprProjectile1[0] = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
 

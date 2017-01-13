@@ -42,7 +42,7 @@ public class Projectile extends GameObject {
 		// Run the despawn timer
 		this.timeAlive--;
 
-		move(false);
+		//move(false);
 		tryDespawn();
 	}
 
