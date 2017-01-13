@@ -58,10 +58,10 @@ public class Handler {
 			int rw = obj1.sprite[0].getWidth();
 			int rh = obj1.sprite[0].getHeight();
 			if (!(rw <= 0 || rh <= 0 || tw <= 0 || th <= 0)) {
-				int tx = obj.x;
-				int ty = obj.y;
-				int rx = obj1.x;
-				int ry = obj1.y;
+				int tx = (int) Math.round(obj.x);
+				int ty = (int) Math.round(obj.y);
+				int rx = (int) Math.round(obj1.x);
+				int ry = (int) Math.round(obj1.y);
 				rw += rx;
 				rh += ry;
 				tw += tx;
@@ -77,7 +77,7 @@ public class Handler {
 	public ArrayList<GameObject> isCollidingRaySprite(Line2D l) {
 		ArrayList<GameObject> col = new ArrayList<GameObject>();
 		for (GameObject obj1 : gameObjects) {
-			Rectangle spriteBoundingBox = new Rectangle(obj1.x, obj1.y, obj1.sprite[0].getWidth(),
+			Rectangle spriteBoundingBox = new Rectangle((int) Math.round(obj1.x), (int) Math.round(obj1.y), obj1.sprite[0].getWidth(),
 					obj1.sprite[0].getHeight());
 			if (l.intersects(spriteBoundingBox))
 				col.add(obj1);

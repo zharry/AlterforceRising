@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
 
-	int x, y, velX, velY;
+	double x, y, velX, velY;
 	int type;
 	double rotateDegs;
 	BufferedImage[] sprite;
@@ -34,10 +34,10 @@ public abstract class GameObject {
 		this.y = y;
 		this.type = type;
 		this.colBox = colBox;
+		this.colBoxOffsetX = colBox.x;
+		this.colBoxOffsetY = colBox.y;
 		this.colBox.x += x;
 		this.colBox.y += y;
-		this.colBoxOffsetX = colBox.x - x;
-		this.colBoxOffsetY = colBox.y - y;
 		this.sprite = sprite;
 	}
 
@@ -67,14 +67,14 @@ public abstract class GameObject {
 	}
 
 	public void moveColBox() {
-		this.colBox.x = this.x + this.colBoxOffsetX;
-		this.colBox.y = this.y + this.colBoxOffsetY;
+		this.colBox.x = (int) Math.round(this.x) + this.colBoxOffsetX;
+		this.colBox.y = (int) Math.round(this.y) + this.colBoxOffsetY;
 		// Ensure that the player's Collision box moves during TP
 		if (this.type == Game.TYPE_PLAYER) {
 			Player player = (Player) this;
 			if (player.goTp) {
-				player.colBox.x = (int) (player.tpXi + player.tpDX * player.tpStep);
-				player.colBox.y = (int) (player.tpYi + player.tpDY * player.tpStep);
+				player.colBox.x = (int) Math.round(player.tpXi + player.tpDX * player.tpStep);
+				player.colBox.y = (int) Math.round(player.tpYi + player.tpDY * player.tpStep);
 			}
 		}
 	}

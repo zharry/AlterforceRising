@@ -12,26 +12,26 @@ public class Player extends GameObject {
 
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
-	int moveDist = 2;
-	int p1x, p1y, p2x, p2y, p3x, p3y;
+	double moveDist = 2.5;
+	double p1x, p1y, p2x, p2y, p3x, p3y;
 
 	// Primary Fire Variables
-	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.5 * Game.tps);
-	int pfProjSpeed = 6, pfTimeAlive = 2 * Game.tps;
+	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.5 * Game.tps), pfTimeAlive = 2 * Game.tps;;
+	double pfProjSpeed = 6.0;
 
 	// Ability Variables
+	int tpStep, tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps; 
 	boolean tpPrep, goTp = false;
-	int tpXi, tpYi, tpLocX, tpLocY, tpStep, tpDist, tpMoveDist = 64;
-	int p1xTP, p1yTP, p2xTP, p2yTP;
+	double tpXi, tpYi, tpLocX, tpLocY, tpDist, tpMoveDist = 64.0;
+	double p1xTP, p1yTP, p2xTP, p2yTP;
 	double tpDX, tpDY;
-	int tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps; // All measured in
-																// ticks
+	
 	// Knockback Variables
 	boolean underKnockback;
-	int kbVelX, kbVelY, kbStep, knockbackPerFrame = 8;
+	double kbVelX, kbVelY, kbStep, knockbackPerFrame = 8.0;
 
 	// Health Variables
-	double health = 100, maxHealth = 100;
+	double health = 100.0, maxHealth = 100.0;
 	double healthRegen = 0.15;
 
 	public Player(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox) {
@@ -57,7 +57,7 @@ public class Player extends GameObject {
 					// Once the TP is over, apply the damage to all intersecting
 					// enemies
 					ArrayList<GameObject> toDmg = Game.gameController
-							.isCollidingRaySprite(new Line2D.Float(this.p2xTP, this.p2yTP, this.p1xTP, this.p1yTP));
+							.isCollidingRaySprite(new Line2D.Double(this.p2xTP, this.p2yTP, this.p1xTP, this.p1yTP));
 					for (GameObject obj : toDmg) {
 						if (obj.type == Game.TYPE_ENEMY) {
 							Enemy temp = (Enemy) obj;
@@ -66,8 +66,8 @@ public class Player extends GameObject {
 					}
 					break;
 				}
-			this.x = (int) (this.tpXi + tpDX * this.tpStep);
-			this.y = (int) (this.tpYi + tpDY * this.tpStep);
+			this.x = this.tpXi + tpDX * this.tpStep;
+			this.y = this.tpYi + tpDY * this.tpStep;
 		} else if (this.underKnockback) {
 			this.kbStep--;
 			if (this.kbStep >= 0) {
@@ -111,11 +111,11 @@ public class Player extends GameObject {
 	@Override
 	public void render(Graphics g) {
 		// Draw Game Object
-		this.p1x = (int) (this.x + this.sprite[0].getWidth() / 2);
-		this.p1y = (int) (this.y + this.sprite[0].getHeight() / 2);
-		this.p2x = (int) (Game.mouseX + this.sprite[0].getWidth() / 2);
-		this.p2y = (int) (Game.mouseY + this.sprite[0].getHeight() / 2);
-		this.p3x = (int) (this.x + this.sprite[0].getWidth() / 2);
+		this.p1x = this.x + this.sprite[0].getWidth() / 2;
+		this.p1y = this.y + this.sprite[0].getHeight() / 2;
+		this.p2x = Game.mouseX + this.sprite[0].getWidth() / 2;
+		this.p2y = Game.mouseY + this.sprite[0].getHeight() / 2;
+		this.p3x = this.x + this.sprite[0].getWidth() / 2;
 		this.p3y = -1;
 		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
@@ -123,13 +123,13 @@ public class Player extends GameObject {
 		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
 				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
 		if (Game.mouseX == this.x && Game.mouseY == this.y) {
-			g.drawImage(Game.sprPlayer[0], this.x, this.y, null);
+			g.drawImage(Game.sprPlayer[0], (int) Math.round(this.x), (int) Math.round(this.y), null);
 		} else {
-			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], this.x, this.y, null);
+			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], (int) Math.round(this.x), (int) Math.round(this.y), null);
 		}
 		if (this.underKnockback) {
 			g.setColor(new Color(255, 0, 0, 128));
-			g.fillOval(this.x, this.y, 32, 32);
+			g.fillOval((int) Math.round(this.x), (int) Math.round(this.y), 32, 32);
 		}
 
 		// Draw HUD Elements
@@ -192,11 +192,11 @@ public class Player extends GameObject {
 	}
 
 	public void primaryFire() {
-		Game.gameController.add(new Projectile(this.x + 8, this.y + 8, Game.TYPE_FRIENDLYPROJECTILE,
+		Game.gameController.add(new Projectile((int) Math.round(this.x) + 8, (int) Math.round(this.y) + 8, Game.TYPE_FRIENDLYPROJECTILE,
 				Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY, pfProjSpeed, this.pfTimeAlive));
 	}
 
-	public void setTp(int x, int y) {
+	public void setTp(double x, double y) {
 		if (this.tpCooldownTimer == 0) {
 			this.p2xTP = p2x;
 			this.p2yTP = p2y;
@@ -211,20 +211,18 @@ public class Player extends GameObject {
 			this.tpLocX = x;
 			this.tpLocY = y;
 			this.tpStep = 1;
-			this.tpDist = (int) (Math.sqrt((x - this.tpXi) * (x - this.tpXi) + (y - this.tpYi) * (y - this.tpYi)));
-			this.tpDX = (x - this.tpXi) / ((double) this.tpDist);
-			this.tpDY = (y - this.tpYi) / ((double) this.tpDist);
+			this.tpDist = Math.sqrt((x - this.tpXi) * (x - this.tpXi) + (y - this.tpYi) * (y - this.tpYi));
+			this.tpDX = (x - this.tpXi) / this.tpDist;
+			this.tpDY = (y - this.tpYi) / this.tpDist;
 		}
 	}
 
-	public void setKnockback(int kb, int x2, int y2) {
+	public void setKnockback(double kb, double x2, double y2) {
 		this.underKnockback = true;
 		double dx = this.x - x2, dy = this.y - y2, dist = Math.sqrt(dx * dx + dy * dy);
 		double velX = (dx / dist) * this.knockbackPerFrame, velY = (dy / dist) * this.knockbackPerFrame;
-		this.kbVelX = (int) (Math.round(velX) == 0 ? (velX > 0 ? Math.ceil(velX) : Math.floor(velX))
-				: Math.round(velX));
-		this.kbVelY = (int) (Math.round(velY) == 0 ? (velY > 0 ? Math.ceil(velY) : Math.floor(velY))
-				: Math.round(velY));
+		this.kbVelX = velX;
+		this.kbVelY = velY;
 		this.kbStep = kb / this.knockbackPerFrame;
 	}
 

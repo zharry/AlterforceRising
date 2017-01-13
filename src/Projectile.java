@@ -26,15 +26,15 @@ public class Projectile extends GameObject {
 	 * @param alive
 	 *            Time before projectile despawns
 	 */
-	public Projectile(int x, int y, int type, BufferedImage[] sprite, double degs, int x2, int y2, int speed, int alive) {
+	public Projectile(int x, int y, int type, BufferedImage[] sprite, double degs, double x2, double y2, double speed, int alive) {
 		super(x, y, type, sprite, new Rectangle(6, 6, 4, 4));
 		this.rotateDegs = degs;
 		this.timeAlive = alive; // Measured in ticks
 		double dist = Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
 		double distX = Math.sin(Math.toRadians(degs)) * dist;
 		double distY = Math.cos(Math.toRadians(degs)) * dist;
-		this.velX = (int) ((distX / dist) * speed);
-		this.velY = (int) ((-distY / dist) * speed);
+		this.velX = (distX / dist) * speed;
+		this.velY = (-distY / dist) * speed;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class Projectile extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(Game.sprProjectile1[(int) this.rotateDegs], this.x, this.y, null);
+		g.drawImage(Game.sprProjectile1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y), null);
 	}
 
 	@Override

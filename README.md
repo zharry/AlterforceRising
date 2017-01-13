@@ -28,3 +28,8 @@ Grade 11, Computer Science Summative. This game is based around the mechanic of 
 
 #### Rotation
 - The rotation should always happen about the center point of the object
+
+#### Data Types
+- Use ints for timers, counter and offsets
+- Use doubles for everything else
+- Cast doubles to int only when required to, do math in double

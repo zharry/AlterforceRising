@@ -27,10 +27,10 @@ public class Debug {
 		g.drawString("KB Vel X: " + Game.player.kbVelX + ", KB Vel Y: " + Game.player.kbVelY, 10, drawY += incY);
 		// Player Rotation Visualization
 		g.setColor(Color.yellow);
-		g.drawLine(Game.player.p2x, Game.player.p2y, Game.player.p1x, Game.player.p1y);
+		g.drawLine((int) Math.round(Game.player.p2x), (int) Math.round(Game.player.p2y), (int) Math.round(Game.player.p1x), (int) Math.round(Game.player.p1y));
 		// TP Damage Visualization
 		g.setColor(Color.red);
-		g.drawLine(Game.player.p2xTP, Game.player.p2yTP, Game.player.p1xTP, Game.player.p1yTP);
+		g.drawLine((int) Math.round(Game.player.p2xTP), (int) Math.round(Game.player.p2yTP), (int) Math.round(Game.player.p1xTP), (int) Math.round(Game.player.p1yTP));
 		
 		// Draw Debug Collision Boxes
 		Graphics2D g2d = (Graphics2D) g;
@@ -46,7 +46,7 @@ public class Debug {
 		for (GameObject obj : Game.gameController.gameObjects) {
 			// Draw Sprite Bounding Boxes
 			g.setColor(Color.pink);
-			g.drawRect(obj.x, obj.y, obj.sprite[0].getWidth(), obj.sprite[0].getHeight());
+			g.drawRect((int) Math.round(obj.x), (int) Math.round(obj.y), obj.sprite[0].getWidth(), obj.sprite[0].getHeight());
 		}
 		// Reset Graphics to original
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
