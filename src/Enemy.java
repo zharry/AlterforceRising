@@ -15,13 +15,47 @@ public class Enemy extends GameObject {
 
 	public Enemy(int x, int y, int type, int subtype) {
 		super(x, y, type);
-		if (subtype == Game.SUCKDIC) {
-			this.sprite = Game.sprProjectile1;
-			this.colBox = new Rectangle(8,8,16,16);
-			this.damage = 5;
-			this.knockback = 8;
-			this.moveDist = 7;
+		// Create Custom Enemy Definitions Here
+		/*
+		 * Required Variables to set:
+		 * sprite, colBox, damage, knockback, moveDist
+		 */
+		if (subtype == Game.ENEMY_DEFAULT) {
+			this.sprite = Game.sprAssassin1;
+			this.colBox = new Rectangle(8, 8, 16, 16);
+			this.damage = 3;
+			this.knockback = 48;
+			this.moveDist = 2.5;
+		} else if (subtype == Game.ENEMY_TANK) {
+			this.sprite = Game.sprAssassin1;
+			this.colBox = new Rectangle(8, 8, 16, 16);
+			this.damage = 1;
+			this.knockback = 60;
+			this.moveDist = 1;
+			this.health = 500;
+			this.maxHealth = 500;
+		} else if (subtype == Game.ENEMY_ASSASSIN) {
+			this.sprite = Game.sprAssassin1;
+			this.colBox = new Rectangle(8, 8, 16, 16);
+			this.damage = 10;
+			this.knockback = 40;
+			this.moveDist = 3.5;
+			this.health = 25;
+			this.maxHealth = 25;
+		} else if (subtype == Game.ENEMY_SCOUT) {
+			this.sprite = Game.sprAssassin1;
+			this.colBox = new Rectangle(8, 8, 16, 16);
+			this.damage = 0.25;
+			this.knockback = 32;
+			this.moveDist = 4.5;
+			this.health = 50;
+			this.maxHealth = 50;
 		}
+		// Process the Collision box
+		this.colBoxOffsetX = colBox.x;
+		this.colBoxOffsetY = colBox.y;
+		this.colBox.x += x;
+		this.colBox.y += y;
 	}
 	
 	public Enemy(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox, double damage, double knockback,
