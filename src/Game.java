@@ -38,6 +38,7 @@ public class Game {
 	static Player player;
 
 	// Game Constants
+	static final int MAXBACKDEG = 45; // One Directional, double for full range
 	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
 	static final int TYPE_ENEMY = 396863;
@@ -86,7 +87,7 @@ public class Game {
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer, new Rectangle(8, 8, 16, 16));
 		gameController.add(player);
-		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1);
+		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 2.5);
 		gameController.add(test);
 		
 		// Start Game

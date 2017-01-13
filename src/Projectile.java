@@ -5,7 +5,8 @@ import java.awt.image.BufferedImage;
 public class Projectile extends GameObject {
 
 	int timeAlive;
-
+	double damage;
+	
 	/**
 	 * @param x
 	 *            X Location
@@ -26,7 +27,7 @@ public class Projectile extends GameObject {
 	 * @param alive
 	 *            Time before projectile despawns
 	 */
-	public Projectile(int x, int y, int type, BufferedImage[] sprite, double degs, double x2, double y2, double speed, int alive) {
+	public Projectile(int x, int y, int type, BufferedImage[] sprite, double degs, double x2, double y2, double speed, double damage, int alive) {
 		super(x, y, type, sprite, new Rectangle(6, 6, 4, 4));
 		this.rotateDegs = degs;
 		this.timeAlive = alive; // Measured in ticks
@@ -35,6 +36,7 @@ public class Projectile extends GameObject {
 		double distY = Math.cos(Math.toRadians(degs)) * dist;
 		this.velX = (distX / noNaN(dist)) * speed;
 		this.velY = (-distY / noNaN(dist)) * speed;
+		this.damage = damage;
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class Projectile extends GameObject {
 		// Run the despawn timer
 		this.timeAlive--;
 
-		//move(false);
+		move(false);
 		tryDespawn();
 	}
 

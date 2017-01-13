@@ -13,7 +13,8 @@ public class Enemy extends GameObject {
 	// Health Variables
 	double health = 100, maxHealth = 100;
 
-	public Enemy(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox, double damage, int knockback, int speed) {
+	public Enemy(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox, double damage, double knockback,
+			double speed) {
 		super(x, y, type, sprite, colBox);
 		this.damage = damage;
 		this.knockback = knockback;
@@ -30,28 +31,43 @@ public class Enemy extends GameObject {
 
 		// Collision Detection
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
-		for (GameObject obj : inCollisionWith) {
+		for (GameObject obj : inCollisionWith)
 			if (obj.type == Game.TYPE_ENEMY) {
 				Enemy enemy = (Enemy) obj;
 				this.setKnockback(10, enemy.x, enemy.y);
 			}
-		}
+		inCollisionWith = Game.gameController.isCollidingSprite(this);
+		double a = this.rotateDegs - Game.MAXBACKDEG;
+		double b = this.rotateDegs + Game.MAXBACKDEG;
+		for (GameObject obj : inCollisionWith)
+			if (obj.type == Game.TYPE_FRIENDLYPROJECTILE) {
+				Projectile proj = (Projectile) obj;
+				double delta = proj.rotateDegs - this.rotateDegs;
+				double z = ((Math.abs(delta) % 360) + 360) % 360;
+				delta = Math.min(z, Math.abs(360 - z));
+				if (delta < Game.MAXBACKDEG) {
+					this.health -= proj.damage;
+				} 
+				Game.gameController.toRemove.add(obj);
+			}
 
 		// Clamp Move and then try to despawn
 		this.health = clamp(this.health, 0, this.maxHealth);
-		move();
+		// move();
 		tryDespawn();
 	}
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(Game.sprAssassin1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y), null);
+		g.drawImage(Game.sprAssassin1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x),
+				(int) Math.round(this.y), null);
 
 		// Draw Healthbar Elements
 		g.setColor(Color.black);
 		g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
 		g.setColor(Color.green);
-		g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, (int) (this.health / (double) this.maxHealth * 32), 5);
+		g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10,
+				(int) (this.health / (double) this.maxHealth * 32), 5);
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
 	}

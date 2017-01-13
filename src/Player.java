@@ -12,7 +12,7 @@ public class Player extends GameObject {
 
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
-	double moveDist = 2;
+	double moveDist = 4;
 	double p1x, p1y, p2x, p2y, p3x, p3y;
 
 	// Primary Fire Variables
@@ -202,7 +202,7 @@ public class Player extends GameObject {
 			this.pfCooldownTimer = this.pfCooldownAmount;
 			Game.gameController.add(new Projectile((int) Math.round(this.x) + 8, (int) Math.round(this.y) + 8,
 					Game.TYPE_FRIENDLYPROJECTILE, Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY,
-					pfProjSpeed, this.pfTimeAlive));
+					pfProjSpeed, 25, this.pfTimeAlive));
 		}
 	}
 
@@ -210,6 +210,7 @@ public class Player extends GameObject {
 		if (this.tpCooldownTimer <= 0) {
 			this.p2xTP = p2x;
 			this.p2yTP = p2y;
+			
 			this.p1xTP = p1x;
 			this.p1yTP = p1y;
 			this.tpPrep = false;

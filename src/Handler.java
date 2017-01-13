@@ -8,7 +8,7 @@ public class Handler {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
-	public synchronized void tick() {
+	public void tick() {
 		for (GameObject object : gameObjects)
 			object.tick();
 		while (!toRemove.isEmpty()) {
@@ -17,7 +17,7 @@ public class Handler {
 		}
 	}
 
-	public synchronized void render(Graphics g) {
+	public void render(Graphics g) {
 		for (GameObject object : gameObjects)
 			if (object.type != Game.TYPE_PLAYER)
 				object.render(g);
