@@ -13,6 +13,10 @@ public class Enemy extends GameObject {
 	// Health Variables
 	double health = 100, maxHealth = 100;
 
+	public Enemy(int x, int y, int type) {
+		super(x, y, type);
+	}
+	
 	public Enemy(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox, double damage, double knockback,
 			double speed) {
 		super(x, y, type, sprite, colBox);
