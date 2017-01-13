@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 public class Game {
 
 	// Window Variables
-	static final String VERSION = "a12.012r3";
+	static final String VERSION = "a12.013r1";
 	static final String TITLE = "Alterforce Rising" + " " + VERSION;
 	static int width, height, panelWidth, panelHeight;
 
@@ -50,6 +50,7 @@ public class Game {
 
 	public static void main(String[] args) throws Exception {
 
+		
 		// Determine resolution
 		int[] resolution = openLauncher();
 		width = resolution[0];
@@ -87,11 +88,11 @@ public class Game {
 		gameController.add(player);
 		Enemy test = new Enemy(256, 128, TYPE_ENEMY, sprAssassin1, new Rectangle(8, 8, 16, 16), 3, 48, 1);
 		gameController.add(test);
-
+		
 		// Start Game
 		running = true;
 		createWindow();
-
+		
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
 		double ns = 1000000000 / (double) tps, delta = 0;

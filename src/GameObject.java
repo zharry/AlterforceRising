@@ -53,7 +53,7 @@ public abstract class GameObject {
 
 	/**
 	 * @param clamp
-	 *            If True, move GameObject without clamping
+	 *            If True, move GameObject with clamping
 	 */
 	public void move(boolean clamp) {
 		this.x += this.velX;
@@ -79,13 +79,12 @@ public abstract class GameObject {
 		}
 	}
 
-	// Overload clamp to allow for double and int arguments
 	public double clamp(double i, double min, double max) {
 		return i < min ? min : i > max ? max : i;
 	}
 
-	public int clamp(int i, int min, int max) {
-		return i < min ? min : i > max ? max : i;
+	public double noNaN(double i) {
+		return i == 0 ? 1 : i;
 	}
-
+	
 }

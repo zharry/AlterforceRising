@@ -12,7 +12,7 @@ public class Player extends GameObject {
 
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
-	double moveDist = 2.5;
+	double moveDist = 2;
 	double p1x, p1y, p2x, p2y, p3x, p3y;
 
 	// Primary Fire Variables
@@ -71,8 +71,8 @@ public class Player extends GameObject {
 		} else if (this.underKnockback) {
 			this.kbStep--;
 			if (this.kbStep >= 0) {
-				this.velX += this.kbVelX;
-				this.velY += this.kbVelY;
+				this.velX = this.kbVelX;
+				this.velY = this.kbVelY;
 			} else {
 				this.underKnockback = false;
 			}
@@ -81,11 +81,16 @@ public class Player extends GameObject {
 			if (this.goUp)
 				this.velY = -this.moveDist;
 			if (this.goDown)
-				this.velY = (this.velY + 1) * this.moveDist;
+				this.velY = this.moveDist;
 			if (this.goLeft)
 				this.velX = -this.moveDist;
 			if (this.goRight)
-				this.velX = (this.velX + 1) * this.moveDist;
+				this.velX = this.moveDist;
+			if (this.goUp && this.goDown)
+				this.velY = 0;
+			if (this.goLeft && this.goRight) {
+				this.velX = 0;
+			}
 		}
 
 		// Collision Detection
@@ -102,7 +107,7 @@ public class Player extends GameObject {
 
 		// Clamp Variables and Move
 		this.health = clamp(this.health, 0, this.maxHealth);
-		this.tpCooldownTimer = clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
+		this.tpCooldownTimer = (int) clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
 		move();
 		tryDespawn();
 
@@ -120,7 +125,7 @@ public class Player extends GameObject {
 		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
 		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
-		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0)
+		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
 				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
 		if (Game.mouseX == this.x && Game.mouseY == this.y) {
 			g.drawImage(Game.sprPlayer[0], (int) Math.round(this.x), (int) Math.round(this.y), null);
@@ -217,15 +222,15 @@ public class Player extends GameObject {
 			this.tpLocY = y;
 			this.tpStep = 1;
 			this.tpDist = Math.sqrt((x - this.tpXi) * (x - this.tpXi) + (y - this.tpYi) * (y - this.tpYi));
-			this.tpDX = (x - this.tpXi) / this.tpDist;
-			this.tpDY = (y - this.tpYi) / this.tpDist;
+			this.tpDX = (x - this.tpXi) / noNaN(this.tpDist);
+			this.tpDY = (y - this.tpYi) / noNaN(this.tpDist);
 		}
 	}
 
 	public void setKnockback(double kb, double x2, double y2) {
 		this.underKnockback = true;
 		double dx = this.x - x2, dy = this.y - y2, dist = Math.sqrt(dx * dx + dy * dy);
-		double velX = (dx / dist) * this.knockbackPerFrame, velY = (dy / dist) * this.knockbackPerFrame;
+		double velX = (dx / noNaN(dist)) * this.knockbackPerFrame, velY = (dy / noNaN(dist)) * this.knockbackPerFrame;
 		this.kbVelX = velX;
 		this.kbVelY = velY;
 		this.kbStep = kb / this.knockbackPerFrame;

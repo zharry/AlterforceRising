@@ -27,8 +27,6 @@ public class Enemy extends GameObject {
 				yChange = this.y - Game.player.y == 0 ? 1 : this.y - Game.player.y;
 		this.velX = (xChange < 0 ? 1 : (xChange == 0 ? 0 : -1)) * moveDist;
 		this.velY = (yChange < 0 ? 1 : (yChange == 0 ? 0 : -1)) * moveDist;
-		this.x += this.velX;
-		this.y += this.velY;
 
 		// Collision Detection
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
@@ -66,7 +64,7 @@ public class Enemy extends GameObject {
 
 	public void setKnockback(double kb, double x2, double y2) {
 		double dx = this.x - x2, dy = this.y - y2, dist = Math.sqrt(dx * dx + dy * dy);
-		double velX = (dx / dist), velY = (dy / dist);
+		double velX = (dx / noNaN(dist)), velY = (dy / noNaN(dist));
 		this.velX = velX;
 		this.velY = velY;
 		this.x += this.velX;

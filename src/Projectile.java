@@ -33,8 +33,8 @@ public class Projectile extends GameObject {
 		double dist = Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
 		double distX = Math.sin(Math.toRadians(degs)) * dist;
 		double distY = Math.cos(Math.toRadians(degs)) * dist;
-		this.velX = (distX / dist) * speed;
-		this.velY = (-distY / dist) * speed;
+		this.velX = (distX / noNaN(dist)) * speed;
+		this.velY = (-distY / noNaN(dist)) * speed;
 	}
 
 	@Override
