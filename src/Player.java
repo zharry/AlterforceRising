@@ -16,16 +16,16 @@ public class Player extends GameObject {
 	double p1x, p1y, p2x, p2y, p3x, p3y;
 
 	// Primary Fire Variables
-	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.5 * Game.tps), pfTimeAlive = 2 * Game.tps;;
+	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.2 * Game.tps), pfTimeAlive = 2 * Game.tps;;
 	double pfProjSpeed = 6.0;
 
 	// Ability Variables
-	int tpStep, tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps; 
+	int tpStep, tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps;
 	boolean tpPrep, goTp = false;
 	double tpXi, tpYi, tpLocX, tpLocY, tpDist, tpMoveDist = 64.0;
 	double p1xTP, p1yTP, p2xTP, p2yTP;
 	double tpDX, tpDY;
-	
+
 	// Knockback Variables
 	boolean underKnockback;
 	double kbVelX, kbVelY, kbStep, knockbackPerFrame = 8.0;
@@ -40,7 +40,7 @@ public class Player extends GameObject {
 
 	@Override
 	public void tick() {
-		this.tpCooldownTimer--;
+		reduceCooldowns();
 		this.health += this.healthRegen / Game.tps;
 
 		// Reset Player Velocity
@@ -125,7 +125,8 @@ public class Player extends GameObject {
 		if (Game.mouseX == this.x && Game.mouseY == this.y) {
 			g.drawImage(Game.sprPlayer[0], (int) Math.round(this.x), (int) Math.round(this.y), null);
 		} else {
-			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], (int) Math.round(this.x), (int) Math.round(this.y), null);
+			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], (int) Math.round(this.x), (int) Math.round(this.y),
+					null);
 		}
 		if (this.underKnockback) {
 			g.setColor(new Color(255, 0, 0, 128));
@@ -192,12 +193,16 @@ public class Player extends GameObject {
 	}
 
 	public void primaryFire() {
-		Game.gameController.add(new Projectile((int) Math.round(this.x) + 8, (int) Math.round(this.y) + 8, Game.TYPE_FRIENDLYPROJECTILE,
-				Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY, pfProjSpeed, this.pfTimeAlive));
+		if (this.pfCooldownTimer <= 0) {
+			this.pfCooldownTimer = this.pfCooldownAmount;
+			Game.gameController.add(new Projectile((int) Math.round(this.x) + 8, (int) Math.round(this.y) + 8,
+					Game.TYPE_FRIENDLYPROJECTILE, Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY,
+					pfProjSpeed, this.pfTimeAlive));
+		}
 	}
 
 	public void setTp(double x, double y) {
-		if (this.tpCooldownTimer == 0) {
+		if (this.tpCooldownTimer <= 0) {
 			this.p2xTP = p2x;
 			this.p2yTP = p2y;
 			this.p1xTP = p1x;
@@ -224,6 +229,11 @@ public class Player extends GameObject {
 		this.kbVelX = velX;
 		this.kbVelY = velY;
 		this.kbStep = kb / this.knockbackPerFrame;
+	}
+
+	public void reduceCooldowns() {
+		this.tpCooldownTimer--;
+		this.pfCooldownTimer--;
 	}
 
 	public void canelAbilities() {

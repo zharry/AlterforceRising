@@ -14,9 +14,9 @@ public class Debug {
 		g.drawString("FPS: " + Game.fps + ", TPS: " + Game.curTps, 10, drawY += incY);
 		g.drawString("Mouse X: " + Game.mouseX + ", Mouse Y: " + Game.mouseY, 10, drawY += incY);
 		// Player Debug
-		g.drawString("X: " + Game.player.x + ", Y: " + Game.player.y + ", Rotate: " + (int) Game.player.rotateDegs, 10,
+		g.drawString("X: " + displayNum(Game.player.x) + ", Y: " + displayNum(Game.player.y) + ", Rotate: " + displayNum(Game.player.rotateDegs), 10,
 				drawY += incY);
-		g.drawString("Vel X: " + Game.player.velX + ", Vel Y: " + Game.player.velY, 10, drawY += incY);
+		g.drawString("Vel X: " + displayNum(Game.player.velX) + ", Vel Y: " + displayNum(Game.player.velY), 10, drawY += incY);
 		g.drawString("TP: " + Game.player.goTp, 10, drawY += incY);
 		g.drawString("TP X: " + Game.player.tpLocX + ", TP Y: " + Game.player.tpLocY, 10, drawY += incY);
 		g.drawString(
@@ -24,7 +24,7 @@ public class Debug {
 				10, drawY += incY);
 		g.drawString("Knockback: " + Game.player.underKnockback + ", KB Step: " + Game.player.kbStep, 10,
 				drawY += incY);
-		g.drawString("KB Vel X: " + Game.player.kbVelX + ", KB Vel Y: " + Game.player.kbVelY, 10, drawY += incY);
+		g.drawString("KB Vel X: " + displayNum(Game.player.kbVelX) + ", KB Vel Y: " + displayNum(Game.player.kbVelY), 10, drawY += incY);
 		// Player Rotation Visualization
 		g.setColor(Color.yellow);
 		g.drawLine((int) Math.round(Game.player.p2x), (int) Math.round(Game.player.p2y), (int) Math.round(Game.player.p1x), (int) Math.round(Game.player.p1y));
@@ -54,5 +54,9 @@ public class Debug {
 	}
 
 	static void debugConsole() {
+	}
+	
+	static double displayNum(double num) {
+		return Math.round(num * 10) / 10.0;
 	}
 }

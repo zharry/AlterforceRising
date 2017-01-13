@@ -44,8 +44,8 @@ public class Game {
 	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
 	// Game Sprites
-	static BufferedImage[] sprPlayer = new BufferedImage[360], sprAssassin1 = new BufferedImage[360];
-	static BufferedImage[] sprProjectile1 = new BufferedImage[360];
+	static BufferedImage[] sprPlayer = new BufferedImage[361], sprAssassin1 = new BufferedImage[361];
+	static BufferedImage[] sprProjectile1 = new BufferedImage[361];
 	static BufferedImage sprTPIcon, sprPFIcon;
 
 	public static void main(String[] args) throws Exception {
@@ -66,7 +66,7 @@ public class Game {
 
 		// Create Sprite Rotations
 		AffineTransformOp op;
-		for (int i = 1; i < 360; i++) {
+		for (int i = 1; i < 361; i++) {
 			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprPlayer[0].getWidth() / 2,
 					sprPlayer[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprPlayer[i] = op.filter(sprPlayer[0], null);
