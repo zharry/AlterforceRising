@@ -9,6 +9,11 @@ public class Enemy extends GameObject {
 	// Attack Variables
 	double damage, knockback;
 	double moveDist;
+	
+	// Movement Variables
+	double p1x, p1y, p2x, p2y, p3x, p3y;
+	double rotSpeed;
+	
 
 	// Health Variables
 	double health = 100, maxHealth = 100;
@@ -18,7 +23,7 @@ public class Enemy extends GameObject {
 		// Create Custom Enemy Definitions Here
 		/*
 		 * Required Variables to set: sprite, colBox, damage, knockback,
-		 * moveDist
+		 * moveDist, rotation speed
 		 */
 		if (subtype == Game.ENEMY_DEFAULT) {
 			this.sprite = Game.sprAssassin1;
@@ -26,14 +31,16 @@ public class Enemy extends GameObject {
 			this.damage = 3;
 			this.knockback = 48;
 			this.moveDist = 2.5;
+			this.rotSpeed = 0.3;
 		} else if (subtype == Game.ENEMY_TANK) {
-			this.sprite = Game.sprAssassin1;
-			this.colBox = new Rectangle(8, 8, 16, 16);
+			this.sprite = Game.sprPlayer;
+			this.colBox = new Rectangle(-8, -8, 64, 64);
 			this.damage = 1;
 			this.knockback = 60;
 			this.moveDist = 1;
 			this.health = 500;
 			this.maxHealth = 500;
+			this.rotSpeed = 0.2;
 		} else if (subtype == Game.ENEMY_ASSASSIN) {
 			this.sprite = Game.sprAssassin1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
@@ -42,6 +49,7 @@ public class Enemy extends GameObject {
 			this.moveDist = 3.5;
 			this.health = 25;
 			this.maxHealth = 25;
+			this.rotSpeed = 0.7;
 		} else if (subtype == Game.ENEMY_SCOUT) {
 			this.sprite = Game.sprAssassin1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
@@ -50,6 +58,7 @@ public class Enemy extends GameObject {
 			this.moveDist = 4.5;
 			this.health = 50;
 			this.maxHealth = 50;
+			this.rotSpeed = 0.5;
 		}
 		// Process the Collision box
 		this.colBoxOffsetX = colBox.x;
@@ -83,8 +92,8 @@ public class Enemy extends GameObject {
 				this.setKnockback(10, enemy.x, enemy.y);
 			}
 		inCollisionWith = Game.gameController.isCollidingSprite(this);
-		double a = this.rotateDegs - Game.MAXBACKDEG;
-		double b = this.rotateDegs + Game.MAXBACKDEG;
+		//double a = this.rotateDegs - Game.MAXBACKDEG;
+		//double b = this.rotateDegs + Game.MAXBACKDEG;
 		for (GameObject obj : inCollisionWith)
 			if (obj.type == Game.TYPE_FRIENDLYPROJECTILE) {
 				Projectile proj = (Projectile) obj;
@@ -105,8 +114,43 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
+		// Rotating enemy towards player
+		this.p1x = this.x + this.sprite[0].getWidth() / 2;
+		this.p1y = this.y + this.sprite[0].getHeight() / 2;
+		this.p2x = Game.player.x + this.sprite[0].getWidth() / 2;
+		this.p2y = Game.player.y + this.sprite[0].getHeight() / 2;
+		this.p3x = this.x + this.sprite[0].getWidth() / 2;
+		this.p3y = -1;
+		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
+		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
+		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
+		// Making rotation move slowly, may be complicated cause I have no clue what I'm doing
+		double oldRotate = this.rotateDegs;
+		
+		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
+				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
+		if (Math.abs(this.rotateDegs - oldRotate) <= 180){
+			if (this.rotateDegs > oldRotate){
+				this.rotateDegs = clamp(this.rotateDegs, oldRotate, oldRotate + rotSpeed);
+			}
+			else{
+				this.rotateDegs = clamp(this.rotateDegs, oldRotate - rotSpeed, oldRotate);
+			}
+		}
+		else{
+			if (this.rotateDegs > oldRotate){
+				this.rotateDegs = oldRotate - rotSpeed;
+				this.rotateDegs = this.rotateDegs < 0 ? this.rotateDegs + 360 : this.rotateDegs;
+			}
+			else{
+				this.rotateDegs = oldRotate + rotSpeed;
+				this.rotateDegs = this.rotateDegs > 360 ? this.rotateDegs - 360 : this.rotateDegs;
+			}
+		}
+		
 		g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y),
 				null);
+		
 
 		// Draw Healthbar Elements
 		g.setColor(Color.black);
