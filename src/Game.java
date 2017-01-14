@@ -129,10 +129,10 @@ public class Game {
 		temp.setVisible(true);
 		temp.setLocationRelativeTo(null);
 		// Resolution Options
-		String[] options = { "480x360", "858x480", "1066x600 (Optimal)", "1280x720" };
+		String[] options = { "858x480", "1066x600 (Optimal)", "1280x720" };
 		int returnCode = JOptionPane.showOptionDialog(null,
 				"Welcome to " + TITLE + "!\n\n" + "Choose your game resolution", TITLE, JOptionPane.DEFAULT_OPTION,
-				JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
+				JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
 		if (returnCode == -1)
 			System.exit(0);
 		temp.dispose();

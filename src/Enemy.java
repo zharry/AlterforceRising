@@ -17,8 +17,8 @@ public class Enemy extends GameObject {
 		super(x, y, type);
 		// Create Custom Enemy Definitions Here
 		/*
-		 * Required Variables to set:
-		 * sprite, colBox, damage, knockback, moveDist
+		 * Required Variables to set: sprite, colBox, damage, knockback,
+		 * moveDist
 		 */
 		if (subtype == Game.ENEMY_DEFAULT) {
 			this.sprite = Game.sprAssassin1;
@@ -57,7 +57,7 @@ public class Enemy extends GameObject {
 		this.colBox.x += x;
 		this.colBox.y += y;
 	}
-	
+
 	public Enemy(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox, double damage, double knockback,
 			double speed) {
 		super(x, y, type, sprite, colBox);
@@ -71,9 +71,9 @@ public class Enemy extends GameObject {
 		// Move this object to Game.player
 		double xChange = this.x - Game.player.x == 0 ? 1 : this.x - Game.player.x,
 				yChange = this.y - Game.player.y == 0 ? 1 : this.y - Game.player.y;
-		double totalDist = Math.sqrt(xChange*xChange+yChange*yChange);
-		this.velX = -xChange/noNaN(totalDist)*this.moveDist;
-		this.velY = -yChange/noNaN(totalDist)*this.moveDist;
+		double totalDist = Math.sqrt(xChange * xChange + yChange * yChange);
+		this.velX = -xChange / noNaN(totalDist) * this.moveDist;
+		this.velY = -yChange / noNaN(totalDist) * this.moveDist;
 
 		// Collision Detection
 		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
@@ -93,7 +93,7 @@ public class Enemy extends GameObject {
 				delta = Math.min(z, Math.abs(360 - z));
 				if (delta < Game.MAXBACKDEG) {
 					this.health -= proj.damage;
-				} 
+				}
 				Game.gameController.toRemove.add(obj);
 			}
 
@@ -105,8 +105,8 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x),
-				(int) Math.round(this.y), null);
+		g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y),
+				null);
 
 		// Draw Healthbar Elements
 		g.setColor(Color.black);
