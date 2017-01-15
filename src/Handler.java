@@ -9,8 +9,20 @@ public class Handler {
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
 	public void tick() {
-		if (Game.random.nextInt(120) == 1) {
+		if (Game.random.nextInt(6000) == -1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
+		}
+		if (Game.random.nextInt(6000) == -1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
+		}
+		if (Game.random.nextInt(6000) == -1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
+		}
+		if (Game.random.nextInt(6000) == -1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_ASSASSIN));
+		}
+		if (Game.random.nextInt(600) == 1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_3));
 		}
 		
 		for (GameObject object : gameObjects)

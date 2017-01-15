@@ -43,10 +43,15 @@ public class Game {
 	static final int TYPE_PLAYER = 386721;
 	static final int TYPE_ENEMY = 396863;
 	static final int ENEMY_DEFAULT = 38569263, ENEMY_TANK = 23643875, ENEMY_ASSASSIN = 82764203, ENEMY_SCOUT=23643473;
+	static final int BOSS_1 = 123456, BOSS_2 = 236654, BOSS_3  = 215648;
 	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
 	// Game Sprites
-	static BufferedImage[] sprPlayer = new BufferedImage[361], sprAssassin1 = new BufferedImage[361];
+	static BufferedImage[] sprPlayer = new BufferedImage[361], sprTimberman1 = new BufferedImage[361];
+	static BufferedImage[] sprTank1 = new BufferedImage[361], sprScout1 = new BufferedImage[361];
+	static BufferedImage[] sprAssassin1 = new BufferedImage[361];
+	static BufferedImage[] sprBoss1 = new BufferedImage[361], sprBoss2 = new BufferedImage[361];
+	static BufferedImage[] sprBoss3 = new BufferedImage[361];
 	static BufferedImage[] sprProjectile1 = new BufferedImage[361];
 	static BufferedImage sprTPIcon, sprPFIcon;
 
@@ -60,8 +65,15 @@ public class Game {
 
 		// Initialize Sprites
 		sprPlayer[0] = ImageIO.read(new File(assetsDir + "GameObjects/Player.png"));
-		sprAssassin1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Assassin1.png"));
+		sprTimberman1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Timberman1.png"));
+		sprTank1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Bandit1.png"));
+		sprScout1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Rat1.png"));
+		sprAssassin1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Hornet1.png"));
 
+		sprBoss1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Ogre1.png"));
+		sprBoss2[0] = ImageIO.read(new File(assetsDir + "GameObjects/Dragon1.png"));
+		sprBoss3[0] = ImageIO.read(new File(assetsDir + "GameObjects/Scorpion1.png"));
+		
 		sprProjectile1[0] = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
 
 		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
@@ -75,13 +87,43 @@ public class Game {
 			sprPlayer[i] = op.filter(sprPlayer[0], null);
 
 			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprAssassin1[0].getWidth() / 2, sprAssassin1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
-			sprAssassin1[i] = op.filter(sprAssassin1[0], null);
+					sprTimberman1[0].getWidth() / 2, sprTimberman1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
+			sprTimberman1[i] = op.filter(sprTimberman1[0], null);
 
 			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
 					sprProjectile1[0].getWidth() / 2, sprProjectile1[0].getHeight() / 2),
 					AffineTransformOp.TYPE_BILINEAR);
 			sprProjectile1[i] = op.filter(sprProjectile1[0], null);
+			
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprTank1[0].getWidth() / 2, sprTank1[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprTank1[i] = op.filter(sprTank1[0], null);
+		
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprScout1[0].getWidth() / 2, sprScout1[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprScout1[i] = op.filter(sprScout1[0], null);
+			
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprAssassin1[0].getWidth() / 2, sprAssassin1[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprAssassin1[i] = op.filter(sprAssassin1[0], null);
+			
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprBoss1[0].getWidth() / 2, sprBoss1[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprBoss1[i] = op.filter(sprBoss1[0], null);
+			
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprBoss2[0].getWidth() / 2, sprBoss2[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprBoss2[i] = op.filter(sprBoss2[0], null);
+			
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
+					sprBoss3[0].getWidth() / 2, sprBoss3[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
+			sprBoss3[i] = op.filter(sprBoss3[0], null);
 		}
 
 		// Make Game Objects

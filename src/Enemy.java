@@ -26,18 +26,18 @@ public class Enemy extends GameObject {
 		 * moveDist, rotation speed
 		 */
 		if (subtype == Game.ENEMY_DEFAULT) {
-			this.sprite = Game.sprAssassin1;
+			this.sprite = Game.sprTimberman1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
 			this.damage = 3;
 			this.knockback = 48;
 			this.moveDist = 2.5;
 			this.rotSpeed = 0.3;
 		} else if (subtype == Game.ENEMY_TANK) {
-			this.sprite = Game.sprPlayer;
-			this.colBox = new Rectangle(-8, -8, 64, 64);
+			this.sprite = Game.sprTank1;
+			this.colBox = new Rectangle(8, 8, 32, 32);
 			this.damage = 1;
 			this.knockback = 60;
-			this.moveDist = 1;
+			this.moveDist = 0.75;
 			this.health = 500;
 			this.maxHealth = 500;
 			this.rotSpeed = 0.2;
@@ -51,7 +51,7 @@ public class Enemy extends GameObject {
 			this.maxHealth = 25;
 			this.rotSpeed = 0.7;
 		} else if (subtype == Game.ENEMY_SCOUT) {
-			this.sprite = Game.sprAssassin1;
+			this.sprite = Game.sprScout1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
 			this.damage = 0.25;
 			this.knockback = 32;
@@ -59,7 +59,35 @@ public class Enemy extends GameObject {
 			this.health = 50;
 			this.maxHealth = 50;
 			this.rotSpeed = 0.5;
+		}else if (subtype == Game.BOSS_1) {
+			this.sprite = Game.sprBoss1;
+			this.colBox = new Rectangle(16, 16, 96, 96);
+			this.damage = 10;
+			this.knockback = 64;
+			this.moveDist = 3.5;
+			this.health = 1000;
+			this.maxHealth = 1000;
+			this.rotSpeed = 0.5;
+		}else if (subtype == Game.BOSS_2) {
+			this.sprite = Game.sprBoss2;
+			this.colBox = new Rectangle(16, 16, 160, 224);
+			this.damage = 5;
+			this.knockback = 256;
+			this.moveDist = 4;
+			this.health = 500;
+			this.maxHealth = 500;
+			this.rotSpeed = 0.5;
+		}else if (subtype == Game.BOSS_3) {
+			this.sprite = Game.sprBoss3;
+			this.colBox = new Rectangle(16, 16, 224, 224);
+			this.damage = 50;
+			this.knockback = 128;
+			this.moveDist = 3.5;
+			this.health = 10000;
+			this.maxHealth = 10000;
+			this.rotSpeed = 0.3;
 		}
+		
 		// Process the Collision box
 		this.colBoxOffsetX = colBox.x;
 		this.colBoxOffsetY = colBox.y;
