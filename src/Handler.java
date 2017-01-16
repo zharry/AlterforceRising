@@ -9,20 +9,35 @@ public class Handler {
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
 	public void tick() {
-		if (Game.random.nextInt(6000) == -1) {
+		if (Game.random.nextInt(6000) == 1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
 		}
-		if (Game.random.nextInt(6000) == -1) {
+		if (Game.random.nextInt(6000) == 1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
 		}
-		if (Game.random.nextInt(6000) == -1) {
+		if (Game.random.nextInt(6000) == 1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
 		}
-		if (Game.random.nextInt(6000) == -1) {
+		if (Game.random.nextInt(6000) == 1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_ASSASSIN));
 		}
-		if (Game.random.nextInt(600) == 1) {
+		if (Game.random.nextInt(6000) == 1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_3));
+		}
+		if (Game.random.nextInt(6000) == 1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_2));
+		}
+		if (Game.random.nextInt(6000) == 1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_1));
+		}
+		if (Game.random.nextInt(1000) == 1) {
+			this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
+		}
+		if (Game.random.nextInt(1000) == 1) {
+			this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_SPEED));
+		}
+		if (Game.random.nextInt(1000) == 1) {
+			this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
 		}
 		
 		for (GameObject object : gameObjects)

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class Player extends GameObject {
 
+	
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
 	double moveDist = 4;
@@ -17,7 +18,7 @@ public class Player extends GameObject {
 
 	// Primary Fire Variables
 	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.2 * Game.tps), pfTimeAlive = 2 * Game.tps;;
-	double pfProjSpeed = 6.0;
+	double pfProjSpeed = 10.0;
 
 	// Ability Variables
 	int tpStep, tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps;
@@ -31,7 +32,7 @@ public class Player extends GameObject {
 	double kbVelX, kbVelY, kbStep, knockbackPerFrame = 8.0;
 
 	// Health Variables
-	double health = 100.0, maxHealth = 100.0;
+	double health = 1000.0, maxHealth = 1000.0;
 	double healthRegen = 0.15;
 
 	public Player(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox) {
@@ -102,6 +103,14 @@ public class Player extends GameObject {
 					this.health -= enemy.damage;
 					this.setKnockback(enemy.knockback, enemy.x, enemy.y);
 				}
+			}
+			if (obj.type == Game.TYPE_POTION){
+				Potion potion = (Potion) obj;
+				this.health += (this.maxHealth - this.health) * potion.healUp;
+				this.moveDist += potion.speedUp;
+				this.pfCooldownAmount = (int) ((potion.aSpeedUp) * Game.tps);
+				potion.healUp = 0;
+				Game.gameController.toRemove.add(potion);
 			}
 		}
 
@@ -244,6 +253,10 @@ public class Player extends GameObject {
 
 	public void canelAbilities() {
 		this.tpPrep = false;
+	}
+	
+	public void potionCheck(){
+		
 	}
 
 }

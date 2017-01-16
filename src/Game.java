@@ -43,6 +43,8 @@ public class Game {
 	static final int TYPE_PLAYER = 386721;
 	static final int TYPE_ENEMY = 396863;
 	static final int ENEMY_DEFAULT = 38569263, ENEMY_TANK = 23643875, ENEMY_ASSASSIN = 82764203, ENEMY_SCOUT=23643473;
+	static final int TYPE_POTION = 376652;
+	static final int POTION_HEALTH = 3564891, POTION_SPEED = 3279465, POTION_DAMAGE = 3651698, POTION_EXP = 3216547;
 	static final int BOSS_1 = 123456, BOSS_2 = 236654, BOSS_3  = 215648;
 	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
@@ -53,6 +55,11 @@ public class Game {
 	static BufferedImage[] sprBoss1 = new BufferedImage[361], sprBoss2 = new BufferedImage[361];
 	static BufferedImage[] sprBoss3 = new BufferedImage[361];
 	static BufferedImage[] sprProjectile1 = new BufferedImage[361];
+	static BufferedImage[] sprHealthPot = new BufferedImage[361];
+	static BufferedImage[] sprDamagePot = new BufferedImage[361];
+	static BufferedImage[] sprSpeedPot = new BufferedImage[361];
+	static BufferedImage[] sprExpPot = new BufferedImage[361];
+	
 	static BufferedImage sprTPIcon, sprPFIcon;
 
 	public static void main(String[] args) throws Exception {
@@ -76,6 +83,11 @@ public class Game {
 		
 		sprProjectile1[0] = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
 
+		sprHealthPot[0] = ImageIO.read(new File(assetsDir + "GameObjects/HealthPotion.png"));
+		sprDamagePot[0] = ImageIO.read(new File(assetsDir + "GameObjects/DamagePotion.png"));
+		sprSpeedPot[0] = ImageIO.read(new File(assetsDir + "GameObjects/SpeedPotion.png"));
+		sprExpPot[0] = ImageIO.read(new File(assetsDir + "GameObjects/ExpPotion.png"));
+		
 		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
 		sprPFIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/PFIcon.png"));
 
@@ -124,6 +136,7 @@ public class Game {
 					sprBoss3[0].getWidth() / 2, sprBoss3[0].getHeight() / 2),
 					AffineTransformOp.TYPE_BILINEAR);
 			sprBoss3[i] = op.filter(sprBoss3[0], null);
+			
 		}
 
 		// Make Game Objects
