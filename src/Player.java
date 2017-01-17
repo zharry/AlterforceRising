@@ -37,9 +37,9 @@ public class Player extends GameObject {
 
 	// Experience Variables
 	double Exp = 0;
-	double maxExp = 100;
+	double maxExp = 10;
 	double level = 1;
-	double ExpPoints = 0;
+	double ExpPoints = 3;
 	
 	// Potion Variables
 	double DPEffectTime = 6 * Game.tps;
@@ -152,6 +152,9 @@ public class Player extends GameObject {
 				else if (potion.subtype == Game.POTION_HEALTH){
 					this.health += (this.maxHealth - this.health) * potion.healUp;
 				}
+				else if (potion.subtype == Game.POTION_EXP){
+					this.Exp += (this.maxExp - this.Exp)/2.0;
+				}
 				Game.gameController.toRemove.add(potion);
 			}
 		}
@@ -159,12 +162,21 @@ public class Player extends GameObject {
 		// Experience
 		if (this.Exp >= this.maxExp){
 			this.Exp = 0;
-			this.maxExp += 20;
+			if (this.level < 10){
+				this.maxExp += 5;
+			}else if (this.level == 10){
+				this.maxExp = 40;
+			}else if (this.level == 11){
+				this.maxExp = 100;
+			}else if (this.level < 20){
+				this.maxExp += 10;
+			}else{
+				this.maxExp += 20;
+			}
 			if (this.level == 1000){
 				this.Exp = 0;
 				this.maxExp = 10000;
-			}
-			else{
+			}else{
 				this.level++;
 				this.ExpPoints += 3;
 			}
@@ -214,9 +226,9 @@ public class Player extends GameObject {
 		g.setColor(Color.DARK_GRAY);
 		g.drawRect(20, Game.panelHeight - 40, 100, 20);
 		g.setColor(Color.black);
-		g.drawString("Health: " + Math.round(this.health * 10) / 10.0 + "/" + this.maxHealth, 20,
+		g.drawString("Health: " + Math.round(this.health * 100) / 100.0 + "/" + Math.round(this.maxHealth * 100) / 100.0, 20,
 				Game.panelHeight - 45);
-		g.drawString("Health Regen: " + this.healthRegen, 20, Game.panelHeight - 58);
+		g.drawString("Health Regen: " + Math.round(this.healthRegen * 100) / 100.0, 20, Game.panelHeight - 58);
 
 		// PF Cooldown Indicator
 		g.setColor(Color.white);
@@ -302,11 +314,11 @@ public class Player extends GameObject {
 		
 		// Level Up Stats
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(20, Game.panelHeight - 90, 100, 20);
+		g.fillRect(20, Game.panelHeight - 80, 100, 10);
 		g.setColor(Color.blue);
-		g.fillRect(20, Game.panelHeight - 90, (int) (this.Exp / (double) this.maxExp * 100), 20);
+		g.fillRect(20, Game.panelHeight - 80, (int) (this.Exp / (double) this.maxExp * 100), 10);
 		g.setColor(Color.black);
-		g.drawString("Experience", 20, Game.panelHeight - 100);
+		g.drawString("Experience     Lvl: " + (int)(this.level), 20, Game.panelHeight - 85);
 		if (this.ExpPoints > 0){
 			g.setColor(Color.white);
 			g.fillRect(20, Game.panelHeight - 130, 70, 20);

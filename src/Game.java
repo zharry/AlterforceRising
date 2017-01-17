@@ -289,26 +289,22 @@ public class Game {
 				if (k == KeyEvent.VK_F3) {
 					// Toggle Debug State
 					debug = !debug;
-				}
-				if (k == KeyEvent.VK_1){
+				}if (k == KeyEvent.VK_1){
 					if (player.ExpPoints > 0){
-						player.health *= 1.1;
-						player.maxHealth *= 1.1;
+						player.health *= 1.2;
+						player.maxHealth *= 1.2;
 						player.healthRegen *= 1.1;
 						player.ExpPoints --;
 					}
-				}
-				if (k == KeyEvent.VK_2){
+				}if (k == KeyEvent.VK_2){
 					if (player.ExpPoints > 0){
-						player.moveDist += 0.1;
+						player.moveDist += 0.2;
 						player.ExpPoints --;
 					}
-				}
-				if (k == KeyEvent.VK_3){
+				}if (k == KeyEvent.VK_3){
 					if (player.ExpPoints > 0){
 						player.pfDamage += 4;
 						player.ExpPoints --;
-						
 					}
 				}
 			}

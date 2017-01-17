@@ -41,10 +41,10 @@ public class Enemy extends GameObject {
 			this.colBox = new Rectangle(8, 8, 32, 32);
 			this.damage = 1;
 			this.knockback = 60;
-			this.moveDist = 0.75;
+			this.moveDist = 1.2;
 			this.health = 500;
 			this.maxHealth = 500;
-			this.rotSpeed = 0.3;
+			this.rotSpeed = 0.4;
 		} else if (subtype == Game.ENEMY_ASSASSIN) {
 			this.sprite = Game.sprAssassin1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
@@ -199,15 +199,18 @@ public class Enemy extends GameObject {
 		if (this.health == 0){
 			if (this.subtype == Game.BOSS_1){
 				Game.player.Exp += 20;
-			}
-			else if (this.subtype == Game.BOSS_2){
+			}else if (this.subtype == Game.BOSS_2){
 				Game.player.Exp += 50;
-			}
-			else if (this.subtype == Game.BOSS_3){
+			}else if (this.subtype == Game.BOSS_3){
 				Game.player.Exp += 100;
-			}
-			else{
+			}else if (this.subtype == Game.ENEMY_DEFAULT){
 				Game.player.Exp += 5;
+			}else if (this.subtype == Game.ENEMY_TANK){
+				Game.player.Exp += 8;
+			}else if (this.subtype == Game.ENEMY_SCOUT){
+				Game.player.Exp += 8;
+			}else if (this.subtype == Game.ENEMY_ASSASSIN){
+				Game.player.Exp += 14;
 			}
 			Game.gameController.toRemove.add(this);
 		}
