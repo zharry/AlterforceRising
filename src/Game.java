@@ -61,6 +61,8 @@ public class Game {
 	static BufferedImage[] sprExpPot = new BufferedImage[361];
 	
 	static BufferedImage sprTPIcon, sprPFIcon;
+	static BufferedImage sprSPIcon, sprDPIcon;
+	static BufferedImage sprExpIcon;
 
 	public static void main(String[] args) throws Exception {
 
@@ -90,6 +92,9 @@ public class Game {
 		
 		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
 		sprPFIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/PFIcon.png"));
+		sprDPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/DPIcon.png"));
+		sprSPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/SPIcon.png"));
+		sprExpIcon = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/LevelUp.png"));
 
 		// Create Sprite Rotations
 		AffineTransformOp op;
@@ -191,7 +196,7 @@ public class Game {
 		if (returnCode == -1)
 			System.exit(0);
 		temp.dispose();
-		// LOL, String to Int for the resolution selection
+		// String to Int for the resolution selection
 		return new int[] { Integer.parseInt(options[returnCode].split("x")[0]),
 				Integer.parseInt(options[returnCode].split("x")[1].split(" ")[0]) };
 	}
@@ -284,6 +289,27 @@ public class Game {
 				if (k == KeyEvent.VK_F3) {
 					// Toggle Debug State
 					debug = !debug;
+				}
+				if (k == KeyEvent.VK_1){
+					if (player.ExpPoints > 0){
+						player.health *= 1.1;
+						player.maxHealth *= 1.1;
+						player.healthRegen *= 1.1;
+						player.ExpPoints --;
+					}
+				}
+				if (k == KeyEvent.VK_2){
+					if (player.ExpPoints > 0){
+						player.moveDist += 0.1;
+						player.ExpPoints --;
+					}
+				}
+				if (k == KeyEvent.VK_3){
+					if (player.ExpPoints > 0){
+						player.pfDamage += 4;
+						player.ExpPoints --;
+						
+					}
 				}
 			}
 

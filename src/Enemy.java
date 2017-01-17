@@ -14,7 +14,9 @@ public class Enemy extends GameObject {
 	double p1x, p1y, p2x, p2y, p3x, p3y;
 	double rotSpeed;
 	
-
+	// Type Variables
+	int subtype;
+	
 	// Health Variables
 	double health = 100, maxHealth = 100;
 
@@ -25,6 +27,8 @@ public class Enemy extends GameObject {
 		 * Required Variables to set: sprite, colBox, damage, knockback,
 		 * moveDist, rotation speed
 		 */
+		this.subtype = subtype;
+		
 		if (subtype == Game.ENEMY_DEFAULT) {
 			this.sprite = Game.sprTimberman1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
@@ -40,7 +44,7 @@ public class Enemy extends GameObject {
 			this.moveDist = 0.75;
 			this.health = 500;
 			this.maxHealth = 500;
-			this.rotSpeed = 0.2;
+			this.rotSpeed = 0.3;
 		} else if (subtype == Game.ENEMY_ASSASSIN) {
 			this.sprite = Game.sprAssassin1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
@@ -61,7 +65,7 @@ public class Enemy extends GameObject {
 			this.rotSpeed = 0.5;
 		}else if (subtype == Game.BOSS_1) {
 			this.sprite = Game.sprBoss1;
-			this.colBox = new Rectangle(16, 16, 96, 96);
+			this.colBox = new Rectangle(8, 8, 112, 112);
 			this.damage = 10;
 			this.knockback = 64;
 			this.moveDist = 3.5;
@@ -79,7 +83,7 @@ public class Enemy extends GameObject {
 			this.rotSpeed = 0.5;
 		}else if (subtype == Game.BOSS_3) {
 			this.sprite = Game.sprBoss3;
-			this.colBox = new Rectangle(16, 16, 224, 224);
+			this.colBox = new Rectangle(8, 8, 240, 240);
 			this.damage = 50;
 			this.knockback = 128;
 			this.moveDist = 3.5;
@@ -152,7 +156,7 @@ public class Enemy extends GameObject {
 		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
 		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
-		// Making rotation move slowly, may be complicated cause I have no clue what I'm doing
+		// Making rotation move slowly
 		double oldRotate = this.rotateDegs;
 		
 		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
@@ -192,9 +196,21 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void tryDespawn() {
-		if (this.health == 0)
-			Game.player.Exp+= 5
+		if (this.health == 0){
+			if (this.subtype == Game.BOSS_1){
+				Game.player.Exp += 20;
+			}
+			else if (this.subtype == Game.BOSS_2){
+				Game.player.Exp += 50;
+			}
+			else if (this.subtype == Game.BOSS_3){
+				Game.player.Exp += 100;
+			}
+			else{
+				Game.player.Exp += 5;
+			}
 			Game.gameController.toRemove.add(this);
+		}
 	}
 
 	public void setKnockback(double kb, double x2, double y2) {

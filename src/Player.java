@@ -18,7 +18,7 @@ public class Player extends GameObject {
 
 	// Primary Fire Variables
 	int pfCooldownTimer = 0, pfCooldownAmount = (int) (0.2 * Game.tps), pfTimeAlive = 2 * Game.tps;;
-	double pfProjSpeed = 10.0;
+	double pfProjSpeed = 10.0, pfDamage = 25;
 
 	// Ability Variables
 	int tpStep, tpCooldownTimer = 0, tpCooldownAmount = 3 * Game.tps;
@@ -32,9 +32,24 @@ public class Player extends GameObject {
 	double kbVelX, kbVelY, kbStep, knockbackPerFrame = 8.0;
 
 	// Health Variables
-	double health = 1000.0, maxHealth = 1000.0;
+	double health = 200.0, maxHealth = 200.0;
 	double healthRegen = 0.15;
 
+	// Experience Variables
+	double Exp = 0;
+	double maxExp = 100;
+	double level = 1;
+	double ExpPoints = 0;
+	
+	// Potion Variables
+	double DPEffectTime = 6 * Game.tps;
+	double SPEffectTime = 6 * Game.tps;
+	double SPEffectAmount = 6 * Game.tps;
+	double DPEffectAmount = 6 * Game.tps;
+	int effectDraw;
+	boolean sPotionON = false;
+	boolean dPotionON = false;
+	
 	public Player(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox) {
 		super(x, y, type, sprite, colBox);
 	}
@@ -43,6 +58,24 @@ public class Player extends GameObject {
 	public void tick() {
 		reduceCooldowns();
 		this.health += this.healthRegen / Game.tps;
+		
+		// Check for potion effects, and reduce cooldowns
+		if (this.sPotionON){
+			this.SPEffectTime --;
+			if (this.SPEffectTime == 0){
+				this.sPotionON = false;
+				this.moveDist = 4;
+				this.SPEffectTime = 6 * Game.tps;
+			}
+		}
+		if (this.dPotionON){
+			this.DPEffectTime --;
+			if (this.DPEffectTime == 0){
+				this.dPotionON = false;
+				this.DPEffectTime = 6 * Game.tps;
+				this.pfCooldownAmount = (int) (0.2 * Game.tps);
+			}
+		}
 
 		// Reset Player Velocity
 		this.velX = 0;
@@ -106,14 +139,38 @@ public class Player extends GameObject {
 			}
 			if (obj.type == Game.TYPE_POTION){
 				Potion potion = (Potion) obj;
-				this.health += (this.maxHealth - this.health) * potion.healUp;
-				this.moveDist += potion.speedUp;
-				this.pfCooldownAmount = (int) ((potion.aSpeedUp) * Game.tps);
-				potion.healUp = 0;
+				if (potion.subtype == Game.POTION_SPEED){
+					this.moveDist += potion.speedUp;
+					this.sPotionON = true;
+					this.SPEffectTime = 6 * Game.tps;
+				}
+				else if (potion.subtype == Game.POTION_DAMAGE){
+					this.pfCooldownAmount = (int) ((potion.aSpeedUp) * Game.tps);
+					this.dPotionON = true;
+					this.DPEffectTime = 6 * Game.tps;
+				}
+				else if (potion.subtype == Game.POTION_HEALTH){
+					this.health += (this.maxHealth - this.health) * potion.healUp;
+				}
 				Game.gameController.toRemove.add(potion);
 			}
 		}
-
+		
+		// Experience
+		if (this.Exp >= this.maxExp){
+			this.Exp = 0;
+			this.maxExp += 20;
+			if (this.level == 1000){
+				this.Exp = 0;
+				this.maxExp = 10000;
+			}
+			else{
+				this.level++;
+				this.ExpPoints += 3;
+			}
+		}
+		
+		
 		// Clamp Variables and Move
 		this.health = clamp(this.health, 0, this.maxHealth);
 		this.tpCooldownTimer = (int) clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
@@ -124,6 +181,7 @@ public class Player extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
+		
 		// Draw Game Object
 		this.p1x = this.x + this.sprite[0].getWidth() / 2;
 		this.p1y = this.y + this.sprite[0].getHeight() / 2;
@@ -177,6 +235,47 @@ public class Player extends GameObject {
 			g.setFont(orig);
 		}
 
+		// Speed Potion Effect Indicator
+		if (this.sPotionON){
+			this.effectDraw = this.dPotionON ? 300 : 250;
+			g.setColor(Color.white);
+			g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
+			g.drawImage(Game.sprSPIcon, this.effectDraw, Game.panelHeight - 55, null);
+			g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
+			g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, (int) (this.SPEffectTime / (double) this.SPEffectAmount * 35));
+			g.setColor(Color.black);
+			g.drawRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
+			if (this.SPEffectTime > 0) {
+				Font orig = g.getFont();
+				g.setColor(Color.black);
+				g.setFont(new Font("default", Font.BOLD, 14));
+				g.drawString(Math.round((this.SPEffectTime / (double) Game.tps) * 10) / 10.0 + "", this.effectDraw + 9,
+						Game.panelHeight - 33);
+				g.setFont(orig);
+			}
+		}
+		
+		
+		// Damage Potion Effect Indicator
+		if (this.dPotionON){
+			this.effectDraw = 250;
+			g.setColor(Color.white);
+			g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
+			g.drawImage(Game.sprDPIcon, this.effectDraw, Game.panelHeight - 55, null);
+			g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
+			g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, (int) (this.DPEffectTime / (double) this.DPEffectAmount * 35));
+			g.setColor(Color.black);
+			g.drawRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
+			if (this.DPEffectTime > 0) {
+				Font orig = g.getFont();
+				g.setColor(Color.black);
+				g.setFont(new Font("default", Font.BOLD, 14));
+				g.drawString(Math.round((this.DPEffectTime / (double) Game.tps) * 10) / 10.0 + "", this.effectDraw + 9,
+						Game.panelHeight - 33);
+				g.setFont(orig);
+			}
+		}
+		
 		// TP Cooldown Indicator
 		g.setColor(Color.cyan);
 		g.fillRect(200, Game.panelHeight - 55, 35, 35);
@@ -200,6 +299,28 @@ public class Player extends GameObject {
 			g.drawImage(Game.sprPlayer[(int) this.rotateDegs], Game.mouseX, Game.mouseY, null);
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
+		
+		// Level Up Stats
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(20, Game.panelHeight - 90, 100, 20);
+		g.setColor(Color.blue);
+		g.fillRect(20, Game.panelHeight - 90, (int) (this.Exp / (double) this.maxExp * 100), 20);
+		g.setColor(Color.black);
+		g.drawString("Experience", 20, Game.panelHeight - 100);
+		if (this.ExpPoints > 0){
+			g.setColor(Color.white);
+			g.fillRect(20, Game.panelHeight - 130, 70, 20);
+			g.fillRect(20, Game.panelHeight - 160, 70, 20);
+			g.fillRect(20, Game.panelHeight - 190, 70, 20);
+			g.setColor(Color.black);
+			g.setFont(new Font("default", Font.BOLD, 14));
+			g.drawString("Health (1)", 20, Game.panelHeight - 115);
+			g.drawString("Speed (2)", 20, Game.panelHeight - 145);
+			g.drawString("Damage (3)", 20, Game.panelHeight - 175);
+			g.drawImage(Game.sprExpIcon, 95, Game.panelHeight - 128, null);
+			g.drawImage(Game.sprExpIcon, 95, Game.panelHeight - 158, null);
+			g.drawImage(Game.sprExpIcon, 95, Game.panelHeight - 188, null);
+		}
 	}
 
 	@Override
@@ -211,7 +332,7 @@ public class Player extends GameObject {
 			this.pfCooldownTimer = this.pfCooldownAmount;
 			Game.gameController.add(new Projectile((int) Math.round(this.x) + 8, (int) Math.round(this.y) + 8,
 					Game.TYPE_FRIENDLYPROJECTILE, Game.sprProjectile1, this.rotateDegs, Game.mouseX, Game.mouseY,
-					pfProjSpeed, 25, this.pfTimeAlive));
+					pfProjSpeed, pfDamage, this.pfTimeAlive));
 		}
 	}
 
@@ -255,8 +376,5 @@ public class Player extends GameObject {
 		this.tpPrep = false;
 	}
 	
-	public void potionCheck(){
-		
-	}
 
 }

@@ -2,6 +2,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class Handler {
 
@@ -9,8 +10,9 @@ public class Handler {
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
 
 	public void tick() {
-		if (Game.random.nextInt(6000) == 1) {
-			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
+		
+		if (Game.random.nextInt(500) == 1) {
+			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
 		}
 		if (Game.random.nextInt(6000) == 1) {
 			this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
@@ -39,13 +41,14 @@ public class Handler {
 		if (Game.random.nextInt(1000) == 1) {
 			this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
 		}
-		
+		try {
 		for (GameObject object : gameObjects)
 			object.tick();
 		while (!toRemove.isEmpty()) {
 			gameObjects.remove(toRemove.get(0));
 			toRemove.remove(toRemove.get(0));
 		}
+		} catch (ConcurrentModificationException e) {}
 	}
 
 	public void render(Graphics g) {
