@@ -193,6 +193,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void tryDespawn() {
 		if (this.health == 0)
+			Game.player.Exp+= 5
 			Game.gameController.toRemove.add(this);
 	}
 
