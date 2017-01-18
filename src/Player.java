@@ -32,7 +32,7 @@ public class Player extends GameObject {
 	double kbVelX, kbVelY, kbStep, knockbackPerFrame = 8.0;
 
 	// Health Variables
-	double health = 200.0, maxHealth = 200.0;
+	double health = 100.0, maxHealth = 100.0;
 	double healthRegen = 0.15;
 
 	// Experience Variables
@@ -325,6 +325,7 @@ public class Player extends GameObject {
 			g.fillRect(20, Game.panelHeight - 160, 70, 20);
 			g.fillRect(20, Game.panelHeight - 190, 70, 20);
 			g.setColor(Color.black);
+			g.drawString("ExpPoints: " + this.ExpPoints, 20, Game.panelHeight - 200);
 			g.setFont(new Font("default", Font.BOLD, 14));
 			g.drawString("Health (1)", 20, Game.panelHeight - 115);
 			g.drawString("Speed (2)", 20, Game.panelHeight - 145);

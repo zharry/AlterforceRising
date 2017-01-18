@@ -8,12 +8,15 @@ public class Handler {
 
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	ArrayList<GameObject> toRemove = new ArrayList<GameObject>();
-
+	
+	// Boss Spawning Variable
+	double bossNum = 1;
+	
 	public void tick() {
 		if (Game.player.level <= 3){
 			if (Game.random.nextInt(150) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
 			}
 		}
@@ -22,27 +25,31 @@ public class Handler {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
 			}if (Game.random.nextInt(300) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
 			}
 		}
 		else if (Game.player.level <= 9){
 			if (Game.random.nextInt(200) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
-			}if (Game.random.nextInt(200) == 1) {
-				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
+			}if (Game.random.nextInt(400) == 1) {
+				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
+			}if (Game.random.nextInt(400) == 1) {
+				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
 			}if (Game.random.nextInt(500) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
 			}
 		}
 		else if (Game.player.level == 10){
-			if (Game.random.nextInt(300) == 1) {
+			if (this.bossNum == 1){
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_1));
+				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_1));
+				this.bossNum ++;
 			}if (Game.random.nextInt(500) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
 			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
@@ -51,28 +58,32 @@ public class Handler {
 		else if (Game.player.level < 15){
 			if (Game.random.nextInt(200) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
-			}if (Game.random.nextInt(400) == 1) {
+			}if (Game.random.nextInt(500) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
-			}if (Game.random.nextInt(400) == 1) {
+			}if (Game.random.nextInt(500) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
 			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
 			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
+			}if (Game.random.nextInt(3000) == 1) {
+				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_SPEED));
 			}
 		}
 		else if (Game.player.level == 15){
-			if (Game.random.nextInt(300) == 1) {
+			if (this.bossNum == 2){
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_2));
+				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_2));
+				this.bossNum ++;
 			}if (Game.random.nextInt(500) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(3000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(3000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(3000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_SPEED));
 			}
 		}
@@ -85,28 +96,29 @@ public class Handler {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
 			}if (Game.random.nextInt(400) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_ASSASSIN));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(3000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(3000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(3000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_SPEED));
 			}
 		}
 		else if (Game.player.level == 20){
-			if (Game.random.nextInt(600) == 1) {
+			if (this.bossNum == 1){
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_3));
+				this.bossNum ++;
 			}if (Game.random.nextInt(500) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(5000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_EXP));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(2000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(2000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_DAMAGE));
-			}if (Game.random.nextInt(1000) == 1) {
+			}if (Game.random.nextInt(2000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_SPEED));
 			}
 		}

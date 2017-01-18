@@ -298,12 +298,12 @@ public class Game {
 					}
 				}if (k == KeyEvent.VK_2){
 					if (player.ExpPoints > 0){
-						player.moveDist += 0.2;
+						player.moveDist += 0.15;
 						player.ExpPoints --;
 					}
 				}if (k == KeyEvent.VK_3){
 					if (player.ExpPoints > 0){
-						player.pfDamage += 4;
+						player.pfDamage += 2.5;
 						player.ExpPoints --;
 					}
 				}
