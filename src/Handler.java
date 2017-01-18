@@ -33,7 +33,7 @@ public class Handler {
 			if (Game.random.nextInt(200) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
 			}if (Game.random.nextInt(400) == 1) {
-				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
+				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_TANK));
 			}if (Game.random.nextInt(400) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
 			}if (Game.random.nextInt(500) == 1) {
