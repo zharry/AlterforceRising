@@ -9,14 +9,14 @@ public class Enemy extends GameObject {
 	// Attack Variables
 	double damage, knockback;
 	double moveDist;
-	
+
 	// Movement Variables
 	double p1x, p1y, p2x, p2y, p3x, p3y;
 	double rotSpeed;
-	
+
 	// Type Variables
 	int subtype;
-	
+
 	// Health Variables
 	double health = 100, maxHealth = 100;
 
@@ -28,7 +28,7 @@ public class Enemy extends GameObject {
 		 * moveDist, rotation speed
 		 */
 		this.subtype = subtype;
-		
+
 		if (subtype == Game.ENEMY_DEFAULT) {
 			this.sprite = Game.sprTimberman1;
 			this.colBox = new Rectangle(8, 8, 16, 16);
@@ -63,7 +63,7 @@ public class Enemy extends GameObject {
 			this.health = 50;
 			this.maxHealth = 50;
 			this.rotSpeed = 0.5;
-		}else if (subtype == Game.BOSS_1) {
+		} else if (subtype == Game.BOSS_1) {
 			this.sprite = Game.sprBoss1;
 			this.colBox = new Rectangle(8, 8, 112, 112);
 			this.damage = 10;
@@ -72,7 +72,7 @@ public class Enemy extends GameObject {
 			this.health = 1000;
 			this.maxHealth = 1000;
 			this.rotSpeed = 0.5;
-		}else if (subtype == Game.BOSS_2) {
+		} else if (subtype == Game.BOSS_2) {
 			this.sprite = Game.sprBoss2;
 			this.colBox = new Rectangle(16, 16, 160, 224);
 			this.damage = 5;
@@ -81,7 +81,7 @@ public class Enemy extends GameObject {
 			this.health = 500;
 			this.maxHealth = 500;
 			this.rotSpeed = 0.5;
-		}else if (subtype == Game.BOSS_3) {
+		} else if (subtype == Game.BOSS_3) {
 			this.sprite = Game.sprBoss3;
 			this.colBox = new Rectangle(8, 8, 240, 240);
 			this.damage = 50;
@@ -91,7 +91,7 @@ public class Enemy extends GameObject {
 			this.maxHealth = 10000;
 			this.rotSpeed = 0.3;
 		}
-		
+
 		// Process the Collision box
 		this.colBoxOffsetX = colBox.x;
 		this.colBoxOffsetY = colBox.y;
@@ -109,14 +109,14 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void tick() {
-		if (!Game.player.menuON){
+		if (!Game.player.menuON) {
 			// Move this object to Game.player
 			double xChange = this.x - Game.player.x == 0 ? 1 : this.x - Game.player.x,
 					yChange = this.y - Game.player.y == 0 ? 1 : this.y - Game.player.y;
 			double totalDist = Math.sqrt(xChange * xChange + yChange * yChange);
 			this.velX = -xChange / noNaN(totalDist) * this.moveDist;
 			this.velY = -yChange / noNaN(totalDist) * this.moveDist;
-	
+
 			// Collision Detection
 			ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
 			for (GameObject obj : inCollisionWith)
@@ -125,8 +125,8 @@ public class Enemy extends GameObject {
 					this.setKnockback(10, enemy.x, enemy.y);
 				}
 			inCollisionWith = Game.gameController.isCollidingSprite(this);
-			//double a = this.rotateDegs - Game.MAXBACKDEG;
-			//double b = this.rotateDegs + Game.MAXBACKDEG;
+			// double a = this.rotateDegs - Game.MAXBACKDEG;
+			// double b = this.rotateDegs + Game.MAXBACKDEG;
 			for (GameObject obj : inCollisionWith)
 				if (obj.type == Game.TYPE_FRIENDLYPROJECTILE) {
 					Projectile proj = (Projectile) obj;
@@ -138,7 +138,7 @@ public class Enemy extends GameObject {
 					}
 					Game.gameController.toRemove.add(obj);
 				}
-	
+
 			// Clamp Move and then try to despawn
 			this.health = clamp(this.health, 0, this.maxHealth);
 			move();
@@ -148,8 +148,8 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		if (Game.player.alive){
-			if (!Game.player.menuON){
+		if (Game.player.alive) {
+			if (!Game.player.menuON) {
 				// Rotating enemy towards player
 				this.p1x = this.x + this.sprite[0].getWidth() / 2;
 				this.p1y = this.y + this.sprite[0].getHeight() / 2;
@@ -162,32 +162,29 @@ public class Enemy extends GameObject {
 				double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
 				// Making rotation move slowly
 				double oldRotate = this.rotateDegs;
-				
-				this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
+
+				this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible
+																	// NaN here
 						+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
-				if (Math.abs(this.rotateDegs - oldRotate) <= 180){
-					if (this.rotateDegs > oldRotate){
+				if (Math.abs(this.rotateDegs - oldRotate) <= 180) {
+					if (this.rotateDegs > oldRotate) {
 						this.rotateDegs = clamp(this.rotateDegs, oldRotate, oldRotate + rotSpeed);
-					}
-					else{
+					} else {
 						this.rotateDegs = clamp(this.rotateDegs, oldRotate - rotSpeed, oldRotate);
 					}
-				}
-				else{
-					if (this.rotateDegs > oldRotate){
+				} else {
+					if (this.rotateDegs > oldRotate) {
 						this.rotateDegs = oldRotate - rotSpeed;
 						this.rotateDegs = this.rotateDegs < 0 ? this.rotateDegs + 360 : this.rotateDegs;
-					}
-					else{
+					} else {
 						this.rotateDegs = oldRotate + rotSpeed;
 						this.rotateDegs = this.rotateDegs > 360 ? this.rotateDegs - 360 : this.rotateDegs;
 					}
 				}
-				
-				g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y),
-						null);
-				
-		
+
+				g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x),
+						(int) Math.round(this.y), null);
+
 				// Draw Healthbar Elements
 				g.setColor(Color.black);
 				g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
@@ -202,20 +199,20 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void tryDespawn() {
-		if (this.health == 0){
-			if (this.subtype == Game.BOSS_1){
+		if (this.health == 0) {
+			if (this.subtype == Game.BOSS_1) {
 				Game.player.Exp += 20;
-			}else if (this.subtype == Game.BOSS_2){
+			} else if (this.subtype == Game.BOSS_2) {
 				Game.player.Exp += 50;
-			}else if (this.subtype == Game.BOSS_3){
+			} else if (this.subtype == Game.BOSS_3) {
 				Game.player.Exp += 100;
-			}else if (this.subtype == Game.ENEMY_DEFAULT){
+			} else if (this.subtype == Game.ENEMY_DEFAULT) {
 				Game.player.Exp += 5;
-			}else if (this.subtype == Game.ENEMY_TANK){
+			} else if (this.subtype == Game.ENEMY_TANK) {
 				Game.player.Exp += 8;
-			}else if (this.subtype == Game.ENEMY_SCOUT){
+			} else if (this.subtype == Game.ENEMY_SCOUT) {
 				Game.player.Exp += 8;
-			}else if (this.subtype == Game.ENEMY_ASSASSIN){
+			} else if (this.subtype == Game.ENEMY_ASSASSIN) {
 				Game.player.Exp += 14;
 			}
 			Game.gameController.toRemove.add(this);

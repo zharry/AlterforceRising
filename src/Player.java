@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class Player extends GameObject {
 
-	
 	// Movement Variables
 	boolean goUp = false, goDown = false, goLeft = false, goRight = false;
 	double moveDist = 4;
@@ -40,7 +39,7 @@ public class Player extends GameObject {
 	double maxExp = 20;
 	double level = 1;
 	double ExpPoints = 3;
-	
+
 	// Potion Variables
 	double DPEffectTime = 6 * Game.tps;
 	double SPEffectTime = 6 * Game.tps;
@@ -49,11 +48,11 @@ public class Player extends GameObject {
 	int effectDraw;
 	boolean sPotionON = false;
 	boolean dPotionON = false;
-	
+
 	// Control Menu Variables
 	boolean menuON = false;
 	boolean alive = true;
-	
+
 	public Player(int x, int y, int type, BufferedImage[] sprite, Rectangle colBox) {
 		super(x, y, type, sprite, colBox);
 	}
@@ -62,19 +61,19 @@ public class Player extends GameObject {
 	public void tick() {
 		reduceCooldowns();
 		this.health += this.healthRegen / Game.tps;
-		
+
 		// Check for potion effects, and reduce cooldowns
-		if (this.sPotionON){
-			this.SPEffectTime --;
-			if (this.SPEffectTime == 0){
+		if (this.sPotionON) {
+			this.SPEffectTime--;
+			if (this.SPEffectTime == 0) {
 				this.sPotionON = false;
 				this.moveDist = 4;
 				this.SPEffectTime = 6 * Game.tps;
 			}
 		}
-		if (this.dPotionON){
-			this.DPEffectTime --;
-			if (this.DPEffectTime == 0){
+		if (this.dPotionON) {
+			this.DPEffectTime--;
+			if (this.DPEffectTime == 0) {
 				this.dPotionON = false;
 				this.DPEffectTime = 6 * Game.tps;
 				this.pfCooldownAmount = (int) (0.2 * Game.tps);
@@ -141,48 +140,44 @@ public class Player extends GameObject {
 					this.setKnockback(enemy.knockback, enemy.x, enemy.y);
 				}
 			}
-			if (obj.type == Game.TYPE_POTION){
+			if (obj.type == Game.TYPE_POTION) {
 				Potion potion = (Potion) obj;
-				if (potion.subtype == Game.POTION_SPEED){
+				if (potion.subtype == Game.POTION_SPEED) {
 					this.moveDist += potion.speedUp;
 					this.sPotionON = true;
 					this.SPEffectTime = 6 * Game.tps;
-				}
-				else if (potion.subtype == Game.POTION_DAMAGE){
+				} else if (potion.subtype == Game.POTION_DAMAGE) {
 					this.pfCooldownAmount = (int) ((potion.aSpeedUp) * Game.tps);
 					this.dPotionON = true;
 					this.DPEffectTime = 6 * Game.tps;
-				}
-				else if (potion.subtype == Game.POTION_HEALTH){
+				} else if (potion.subtype == Game.POTION_HEALTH) {
 					this.health += (this.maxHealth - this.health) * potion.healUp;
-				}
-				else if (potion.subtype == Game.POTION_EXP){
-					this.Exp += (this.maxExp - this.Exp)/2.0;
+				} else if (potion.subtype == Game.POTION_EXP) {
+					this.Exp += (this.maxExp - this.Exp) / 2.0;
 				}
 				Game.gameController.toRemove.add(potion);
 			}
 		}
-		
+
 		// Experience
-		if (this.Exp >= this.maxExp){
+		if (this.Exp >= this.maxExp) {
 			this.Exp = 0;
-			if (this.level < 10){
+			if (this.level < 10) {
 				this.maxExp += 5;
-			}else if (this.level < 20){
+			} else if (this.level < 20) {
 				this.maxExp += 10;
-			}else{
+			} else {
 				this.maxExp += 20;
 			}
-			if (this.level == 1000){
+			if (this.level == 1000) {
 				this.Exp = 0;
 				this.maxExp = 10000;
-			}else{
+			} else {
 				this.level++;
 				this.ExpPoints += 3;
 			}
 		}
-		
-		
+
 		// Clamp Variables and Move
 		this.health = clamp(this.health, 0, this.maxHealth);
 		this.tpCooldownTimer = (int) clamp(this.tpCooldownTimer, 0, this.tpCooldownAmount);
@@ -193,8 +188,8 @@ public class Player extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		if (this.alive){
-			if (!this.menuON){
+		if (this.alive) {
+			if (!this.menuON) {
 				// Draw Game Object
 				this.p1x = this.x + this.sprite[0].getWidth() / 2;
 				this.p1y = this.y + this.sprite[0].getHeight() / 2;
@@ -205,19 +200,20 @@ public class Player extends GameObject {
 				double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
 				double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
 				double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
-				this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
+				this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible
+																	// NaN here
 						+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
 				if (Game.mouseX == this.x && Game.mouseY == this.y) {
 					g.drawImage(Game.sprPlayer[0], (int) Math.round(this.x), (int) Math.round(this.y), null);
 				} else {
-					g.drawImage(Game.sprPlayer[(int) this.rotateDegs], (int) Math.round(this.x), (int) Math.round(this.y),
-							null);
+					g.drawImage(Game.sprPlayer[(int) this.rotateDegs], (int) Math.round(this.x),
+							(int) Math.round(this.y), null);
 				}
 				if (this.underKnockback) {
 					g.setColor(new Color(255, 0, 0, 128));
 					g.fillOval((int) Math.round(this.x), (int) Math.round(this.y), 32, 32);
 				}
-		
+
 				// Draw HUD Elements
 				// Healthbar
 				g.setColor(Color.red);
@@ -227,16 +223,17 @@ public class Player extends GameObject {
 				g.setColor(Color.DARK_GRAY);
 				g.drawRect(20, Game.panelHeight - 40, 100, 20);
 				g.setColor(Color.black);
-				g.drawString("Health: " + Math.round(this.health * 100) / 100.0 + "/" + Math.round(this.maxHealth * 100) / 100.0, 20,
-						Game.panelHeight - 45);
+				g.drawString("Health: " + Math.round(this.health * 100) / 100.0 + "/"
+						+ Math.round(this.maxHealth * 100) / 100.0, 20, Game.panelHeight - 45);
 				g.drawString("Health Regen: " + Math.round(this.healthRegen * 100) / 100.0, 20, Game.panelHeight - 58);
-		
+
 				// PF Cooldown Indicator
 				g.setColor(Color.white);
 				g.fillRect(150, Game.panelHeight - 55, 35, 35);
 				g.drawImage(Game.sprPFIcon, 150, Game.panelHeight - 55, null);
 				g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-				g.fillRect(150, Game.panelHeight - 55, 35, (int) (this.pfCooldownTimer / (double) this.pfCooldownAmount * 35));
+				g.fillRect(150, Game.panelHeight - 55, 35,
+						(int) (this.pfCooldownTimer / (double) this.pfCooldownAmount * 35));
 				g.setColor(Color.black);
 				g.drawRect(150, Game.panelHeight - 55, 35, 35);
 				if (this.pfCooldownTimer > 0) {
@@ -247,54 +244,56 @@ public class Player extends GameObject {
 							Game.panelHeight - 33);
 					g.setFont(orig);
 				}
-		
+
 				// Speed Potion Effect Indicator
-				if (this.sPotionON){
+				if (this.sPotionON) {
 					this.effectDraw = this.dPotionON ? 300 : 250;
 					g.setColor(Color.white);
 					g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
 					g.drawImage(Game.sprSPIcon, this.effectDraw, Game.panelHeight - 55, null);
 					g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-					g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, (int) (this.SPEffectTime / (double) this.SPEffectAmount * 35));
+					g.fillRect(this.effectDraw, Game.panelHeight - 55, 35,
+							(int) (this.SPEffectTime / (double) this.SPEffectAmount * 35));
 					g.setColor(Color.black);
 					g.drawRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
 					if (this.SPEffectTime > 0) {
 						Font orig = g.getFont();
 						g.setColor(Color.black);
 						g.setFont(new Font("default", Font.BOLD, 14));
-						g.drawString(Math.round((this.SPEffectTime / (double) Game.tps) * 10) / 10.0 + "", this.effectDraw + 9,
-								Game.panelHeight - 33);
+						g.drawString(Math.round((this.SPEffectTime / (double) Game.tps) * 10) / 10.0 + "",
+								this.effectDraw + 9, Game.panelHeight - 33);
 						g.setFont(orig);
 					}
 				}
-				
-				
+
 				// Damage Potion Effect Indicator
-				if (this.dPotionON){
+				if (this.dPotionON) {
 					this.effectDraw = 250;
 					g.setColor(Color.white);
 					g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
 					g.drawImage(Game.sprDPIcon, this.effectDraw, Game.panelHeight - 55, null);
 					g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-					g.fillRect(this.effectDraw, Game.panelHeight - 55, 35, (int) (this.DPEffectTime / (double) this.DPEffectAmount * 35));
+					g.fillRect(this.effectDraw, Game.panelHeight - 55, 35,
+							(int) (this.DPEffectTime / (double) this.DPEffectAmount * 35));
 					g.setColor(Color.black);
 					g.drawRect(this.effectDraw, Game.panelHeight - 55, 35, 35);
 					if (this.DPEffectTime > 0) {
 						Font orig = g.getFont();
 						g.setColor(Color.black);
 						g.setFont(new Font("default", Font.BOLD, 14));
-						g.drawString(Math.round((this.DPEffectTime / (double) Game.tps) * 10) / 10.0 + "", this.effectDraw + 9,
-								Game.panelHeight - 33);
+						g.drawString(Math.round((this.DPEffectTime / (double) Game.tps) * 10) / 10.0 + "",
+								this.effectDraw + 9, Game.panelHeight - 33);
 						g.setFont(orig);
 					}
 				}
-				
+
 				// TP Cooldown Indicator
 				g.setColor(Color.cyan);
 				g.fillRect(200, Game.panelHeight - 55, 35, 35);
 				g.drawImage(Game.sprTPIcon, 200, Game.panelHeight - 55, null);
 				g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-				g.fillRect(200, Game.panelHeight - 55, 35, (int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
+				g.fillRect(200, Game.panelHeight - 55, 35,
+						(int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
 				g.setColor(Color.black);
 				g.drawRect(200, Game.panelHeight - 55, 35, 35);
 				if (this.tpCooldownTimer > 0) {
@@ -312,15 +311,15 @@ public class Player extends GameObject {
 					g.drawImage(Game.sprPlayer[(int) this.rotateDegs], Game.mouseX, Game.mouseY, null);
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 				}
-				
+
 				// Level Up Stats
 				g.setColor(Color.DARK_GRAY);
 				g.fillRect(20, Game.panelHeight - 80, 100, 10);
 				g.setColor(Color.blue);
 				g.fillRect(20, Game.panelHeight - 80, (int) (this.Exp / (double) this.maxExp * 100), 10);
 				g.setColor(Color.black);
-				g.drawString("Experience     Lvl: " + (int)(this.level), 20, Game.panelHeight - 85);
-				if (this.ExpPoints > 0){
+				g.drawString("Experience     Lvl: " + (int) (this.level), 20, Game.panelHeight - 85);
+				if (this.ExpPoints > 0) {
 					g.setColor(Color.white);
 					g.fillRect(20, Game.panelHeight - 130, 80, 20);
 					g.fillRect(20, Game.panelHeight - 160, 80, 20);
@@ -335,24 +334,28 @@ public class Player extends GameObject {
 					g.drawImage(Game.sprExpIcon, 105, Game.panelHeight - 158, null);
 					g.drawImage(Game.sprExpIcon, 105, Game.panelHeight - 188, null);
 				}
-				
+
 				// Control Menu
 				g.setColor(Color.black);
 				g.setFont(new Font("default", Font.PLAIN, 14));
 				g.drawString("Press F4 for controls", Game.panelWidth - 200, Game.panelHeight - 10);
-			}
-			else{
+			} else {
 				// Control Menu
 				g.setColor(Color.black);
 				g.setFont(new Font("default", Font.BOLD, 18));
 				g.drawString("Use WASD or up, down, right and left buttons to move.", 50, 50);
-				g.drawString("Use left-click for primary fire. Be careful, eneemies only take damage from primary fire if hit from behind.", 50, 80);
-				g.drawString("Use right-click to teleport. Teleport deals damage to enemies it passes through.", 50, 110);
+				g.drawString(
+						"Use left-click for primary fire. Be careful, eneemies only take damage from primary fire if hit from behind.",
+						50, 80);
+				g.drawString("Use right-click to teleport. Teleport deals damage to enemies it passes through.", 50,
+						110);
 				g.drawString("Pick up potions for boosts in health, damage, speed, and experience.", 50, 140);
 				g.drawImage(Game.sprDPIcon, 110, 145, null);
 				g.drawImage(Game.sprSPIcon, 170, 145, null);
 				g.drawString("Your player has levels. Defeat enemies to earn experience!", 50, Game.panelHeight - 250);
-				g.drawString("Every time you level up, you get experience points you can use to upgrade your health, speed and damage.", 50, Game.panelHeight - 220);
+				g.drawString(
+						"Every time you level up, you get experience points you can use to upgrade your health, speed and damage.",
+						50, Game.panelHeight - 220);
 				g.drawString("Use hotkeys 1, 2, and 3 respectively to level them up.", 50, Game.panelHeight - 190);
 				g.setFont(new Font("default", Font.PLAIN, 14));
 				g.drawString("F4 to exit", 50, Game.panelHeight - 160);
@@ -362,7 +365,7 @@ public class Player extends GameObject {
 
 	@Override
 	public void tryDespawn() {
-		if (this.health == 0){
+		if (this.health == 0) {
 			Game.gameController.toRemove.add(this);
 			this.alive = false;
 		}
@@ -381,7 +384,7 @@ public class Player extends GameObject {
 		if (this.tpCooldownTimer <= 0) {
 			this.p2xTP = p2x;
 			this.p2yTP = p2y;
-			
+
 			this.p1xTP = p1x;
 			this.p1yTP = p1y;
 			this.tpPrep = false;
@@ -416,6 +419,5 @@ public class Player extends GameObject {
 	public void canelAbilities() {
 		this.tpPrep = false;
 	}
-	
 
 }

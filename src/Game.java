@@ -39,14 +39,17 @@ public class Game {
 	static Player player;
 
 	// Game Constants
-	static final int MAXBACKDEG = 45; // One Directional, double for full range
+	static final int MAXBACKDEG = 90; // One Directional, double for full range
 	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
+
 	static final int TYPE_ENEMY = 396863;
 	static final int ENEMY_DEFAULT = 38569263, ENEMY_TANK = 23643875, ENEMY_ASSASSIN = 82764203, ENEMY_SCOUT = 23643473;
+	static final int BOSS_1 = 123456, BOSS_2 = 236654, BOSS_3 = 215648;
+
 	static final int TYPE_POTION = 376652;
 	static final int POTION_HEALTH = 3564891, POTION_SPEED = 3279465, POTION_DAMAGE = 3651698, POTION_EXP = 3216547;
-	static final int BOSS_1 = 123456, BOSS_2 = 236654, BOSS_3 = 215648;
+
 	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
 	// Game Sprites
@@ -218,16 +221,16 @@ public class Game {
 				// Reset Frame
 				g.drawImage(getWidth() == 600 ? sprBackground2 : getWidth() == 480 ? sprBackground1 : sprBackground3, 0,
 						0, null);
-				if (player.menuON){
+				if (player.menuON) {
 					g.setColor(Color.gray);
 					g.fillRect(0, 0, getWidth(), getHeight());
 				}
-				if (!player.alive){
+				if (!player.alive) {
 					g.setColor(Color.gray);
-					g.fillRect(0,  0, getWidth(), getHeight());
+					g.fillRect(0, 0, getWidth(), getHeight());
 					g.setColor(Color.RED);
 					g.setFont(new Font("default", Font.BOLD, 30));
-					g.drawString("GAME OVER", getWidth()/2 - 100, getHeight()/2);
+					g.drawString("GAME OVER", getWidth() / 2 - 100, getHeight() / 2);
 				}
 				// Render Game
 				gameController.render(g);

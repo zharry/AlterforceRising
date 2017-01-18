@@ -6,7 +6,7 @@ public class Projectile extends GameObject {
 
 	int timeAlive;
 	double damage;
-	
+
 	/**
 	 * @param x
 	 *            X Location
@@ -27,7 +27,8 @@ public class Projectile extends GameObject {
 	 * @param alive
 	 *            Time before projectile despawns
 	 */
-	public Projectile(int x, int y, int type, BufferedImage[] sprite, double degs, double x2, double y2, double speed, double damage, int alive) {
+	public Projectile(int x, int y, int type, BufferedImage[] sprite, double degs, double x2, double y2, double speed,
+			double damage, int alive) {
 		super(x, y, type, sprite, new Rectangle(6, 6, 4, 4));
 		this.rotateDegs = degs;
 		this.timeAlive = alive; // Measured in ticks
@@ -50,8 +51,9 @@ public class Projectile extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		if (!Game.player.menuON){
-			g.drawImage(Game.sprProjectile1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y), null);
+		if (!Game.player.menuON) {
+			g.drawImage(Game.sprProjectile1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x),
+					(int) Math.round(this.y), null);
 		}
 	}
 
