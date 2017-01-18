@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -42,10 +43,10 @@ public class Game {
 	static final String assetsDir = "Assets/";
 	static final int TYPE_PLAYER = 386721;
 	static final int TYPE_ENEMY = 396863;
-	static final int ENEMY_DEFAULT = 38569263, ENEMY_TANK = 23643875, ENEMY_ASSASSIN = 82764203, ENEMY_SCOUT=23643473;
+	static final int ENEMY_DEFAULT = 38569263, ENEMY_TANK = 23643875, ENEMY_ASSASSIN = 82764203, ENEMY_SCOUT = 23643473;
 	static final int TYPE_POTION = 376652;
 	static final int POTION_HEALTH = 3564891, POTION_SPEED = 3279465, POTION_DAMAGE = 3651698, POTION_EXP = 3216547;
-	static final int BOSS_1 = 123456, BOSS_2 = 236654, BOSS_3  = 215648;
+	static final int BOSS_1 = 123456, BOSS_2 = 236654, BOSS_3 = 215648;
 	static final int TYPE_FRIENDLYPROJECTILE = 326134;
 
 	// Game Sprites
@@ -59,14 +60,15 @@ public class Game {
 	static BufferedImage[] sprDamagePot = new BufferedImage[361];
 	static BufferedImage[] sprSpeedPot = new BufferedImage[361];
 	static BufferedImage[] sprExpPot = new BufferedImage[361];
-	
+
 	static BufferedImage sprTPIcon, sprPFIcon;
 	static BufferedImage sprSPIcon, sprDPIcon;
 	static BufferedImage sprExpIcon;
 
+	static BufferedImage sprBackground1, sprBackground2, sprBackground3;
+
 	public static void main(String[] args) throws Exception {
 
-		
 		// Determine resolution
 		int[] resolution = openLauncher();
 		width = resolution[0];
@@ -82,19 +84,23 @@ public class Game {
 		sprBoss1[0] = ImageIO.read(new File(assetsDir + "GameObjects/Ogre1.png"));
 		sprBoss2[0] = ImageIO.read(new File(assetsDir + "GameObjects/Dragon1.png"));
 		sprBoss3[0] = ImageIO.read(new File(assetsDir + "GameObjects/Scorpion1.png"));
-		
+
 		sprProjectile1[0] = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/Projectile1.png"));
 
 		sprHealthPot[0] = ImageIO.read(new File(assetsDir + "GameObjects/HealthPotion.png"));
 		sprDamagePot[0] = ImageIO.read(new File(assetsDir + "GameObjects/DamagePotion.png"));
 		sprSpeedPot[0] = ImageIO.read(new File(assetsDir + "GameObjects/SpeedPotion.png"));
 		sprExpPot[0] = ImageIO.read(new File(assetsDir + "GameObjects/ExpPotion.png"));
-		
+
 		sprTPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/TPIcon.png"));
 		sprPFIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/PFIcon.png"));
 		sprDPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/DPIcon.png"));
 		sprSPIcon = ImageIO.read(new File(assetsDir + "Icons (35x35)/SPIcon.png"));
 		sprExpIcon = ImageIO.read(new File(assetsDir + "Projectiles (16x16)/LevelUp.png"));
+
+		sprBackground1 = ImageIO.read(new File(assetsDir + "Backgrounds/Background1.png"));
+		sprBackground2 = ImageIO.read(new File(assetsDir + "Backgrounds/Background2.png"));
+		sprBackground3 = ImageIO.read(new File(assetsDir + "Backgrounds/Background3.png"));
 
 		// Create Sprite Rotations
 		AffineTransformOp op;
@@ -104,55 +110,50 @@ public class Game {
 			sprPlayer[i] = op.filter(sprPlayer[0], null);
 
 			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprTimberman1[0].getWidth() / 2, sprTimberman1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
+					sprTimberman1[0].getWidth() / 2, sprTimberman1[0].getHeight() / 2),
+					AffineTransformOp.TYPE_BILINEAR);
 			sprTimberman1[i] = op.filter(sprTimberman1[0], null);
 
 			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
 					sprProjectile1[0].getWidth() / 2, sprProjectile1[0].getHeight() / 2),
 					AffineTransformOp.TYPE_BILINEAR);
 			sprProjectile1[i] = op.filter(sprProjectile1[0], null);
-			
-			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprTank1[0].getWidth() / 2, sprTank1[0].getHeight() / 2),
-					AffineTransformOp.TYPE_BILINEAR);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprTank1[0].getWidth() / 2,
+					sprTank1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprTank1[i] = op.filter(sprTank1[0], null);
-		
-			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprScout1[0].getWidth() / 2, sprScout1[0].getHeight() / 2),
-					AffineTransformOp.TYPE_BILINEAR);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprScout1[0].getWidth() / 2,
+					sprScout1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprScout1[i] = op.filter(sprScout1[0], null);
-			
+
 			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprAssassin1[0].getWidth() / 2, sprAssassin1[0].getHeight() / 2),
-					AffineTransformOp.TYPE_BILINEAR);
+					sprAssassin1[0].getWidth() / 2, sprAssassin1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprAssassin1[i] = op.filter(sprAssassin1[0], null);
-			
-			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprBoss1[0].getWidth() / 2, sprBoss1[0].getHeight() / 2),
-					AffineTransformOp.TYPE_BILINEAR);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprBoss1[0].getWidth() / 2,
+					sprBoss1[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprBoss1[i] = op.filter(sprBoss1[0], null);
-			
-			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprBoss2[0].getWidth() / 2, sprBoss2[0].getHeight() / 2),
-					AffineTransformOp.TYPE_BILINEAR);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprBoss2[0].getWidth() / 2,
+					sprBoss2[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprBoss2[i] = op.filter(sprBoss2[0], null);
-			
-			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i),
-					sprBoss3[0].getWidth() / 2, sprBoss3[0].getHeight() / 2),
-					AffineTransformOp.TYPE_BILINEAR);
+
+			op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(i), sprBoss3[0].getWidth() / 2,
+					sprBoss3[0].getHeight() / 2), AffineTransformOp.TYPE_BILINEAR);
 			sprBoss3[i] = op.filter(sprBoss3[0], null);
-			
+
 		}
 
 		// Make Game Objects
 		gameController = new Handler();
 		player = new Player(64, 64, TYPE_PLAYER, sprPlayer, new Rectangle(8, 8, 16, 16));
 		gameController.add(player);
-		
+
 		// Start Game
 		running = true;
 		createWindow();
-		
+
 		// Game Loop
 		long lastTime = System.nanoTime(), timer = System.currentTimeMillis();
 		double ns = 1000000000 / (double) tps, delta = 0;
@@ -215,8 +216,19 @@ public class Game {
 			@Override
 			public void paint(Graphics g) {
 				// Reset Frame
-				g.setColor(Color.lightGray);
-				g.fillRect(0, 0, getWidth(), getHeight());
+				g.drawImage(getWidth() == 600 ? sprBackground2 : getWidth() == 480 ? sprBackground1 : sprBackground3, 0,
+						0, null);
+				if (player.menuON){
+					g.setColor(Color.gray);
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				if (!player.alive){
+					g.setColor(Color.gray);
+					g.fillRect(0,  0, getWidth(), getHeight());
+					g.setColor(Color.RED);
+					g.setFont(new Font("default", Font.BOLD, 30));
+					g.drawString("GAME OVER", getWidth()/2 - 100, getHeight()/2);
+				}
 				// Render Game
 				gameController.render(g);
 				if (debug)
@@ -289,22 +301,29 @@ public class Game {
 				if (k == KeyEvent.VK_F3) {
 					// Toggle Debug State
 					debug = !debug;
-				}if (k == KeyEvent.VK_1){
-					if (player.ExpPoints > 0){
+				}
+				if (k == KeyEvent.VK_F4) {
+					// Toggle Control Menu
+					player.menuON = !player.menuON;
+				}
+				if (k == KeyEvent.VK_1) {
+					if (player.ExpPoints > 0) {
 						player.health *= 1.2;
 						player.maxHealth *= 1.2;
 						player.healthRegen *= 1.1;
-						player.ExpPoints --;
+						player.ExpPoints--;
 					}
-				}if (k == KeyEvent.VK_2){
-					if (player.ExpPoints > 0){
+				}
+				if (k == KeyEvent.VK_2) {
+					if (player.ExpPoints > 0) {
 						player.moveDist += 0.15;
-						player.ExpPoints --;
+						player.ExpPoints--;
 					}
-				}if (k == KeyEvent.VK_3){
-					if (player.ExpPoints > 0){
+				}
+				if (k == KeyEvent.VK_3) {
+					if (player.ExpPoints > 0) {
 						player.pfDamage += 2.5;
-						player.ExpPoints --;
+						player.ExpPoints--;
 					}
 				}
 			}

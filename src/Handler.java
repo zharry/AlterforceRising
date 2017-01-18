@@ -125,18 +125,18 @@ public class Handler {
 		else{
 			if (Game.random.nextInt(500) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
-			}if (Game.random.nextInt(800) == 1) {
+			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
-			}if (Game.random.nextInt(800) == 1) {
+			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_SCOUT));
-			}if (Game.random.nextInt(800) == 1) {
+			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.ENEMY_ASSASSIN));
 			}if (Game.random.nextInt(2000) == 1) {
-				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_3));
+				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_1));
 			}if (Game.random.nextInt(4000) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_2));
-			}if (Game.random.nextInt(6000) == 1) {
-				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_1));
+			}if (Game.random.nextInt(10000) == 1) {
+				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_ENEMY, Game.BOSS_3));
 			}if (Game.random.nextInt(1000) == 1) {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight), Game.TYPE_POTION, Game.POTION_HEALTH));
 			}if (Game.random.nextInt(1000) == 1) {

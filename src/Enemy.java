@@ -109,89 +109,95 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void tick() {
-		// Move this object to Game.player
-		double xChange = this.x - Game.player.x == 0 ? 1 : this.x - Game.player.x,
-				yChange = this.y - Game.player.y == 0 ? 1 : this.y - Game.player.y;
-		double totalDist = Math.sqrt(xChange * xChange + yChange * yChange);
-		this.velX = -xChange / noNaN(totalDist) * this.moveDist;
-		this.velY = -yChange / noNaN(totalDist) * this.moveDist;
-
-		// Collision Detection
-		ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
-		for (GameObject obj : inCollisionWith)
-			if (obj.type == Game.TYPE_ENEMY) {
-				Enemy enemy = (Enemy) obj;
-				this.setKnockback(10, enemy.x, enemy.y);
-			}
-		inCollisionWith = Game.gameController.isCollidingSprite(this);
-		//double a = this.rotateDegs - Game.MAXBACKDEG;
-		//double b = this.rotateDegs + Game.MAXBACKDEG;
-		for (GameObject obj : inCollisionWith)
-			if (obj.type == Game.TYPE_FRIENDLYPROJECTILE) {
-				Projectile proj = (Projectile) obj;
-				double delta = proj.rotateDegs - this.rotateDegs;
-				double z = ((Math.abs(delta) % 360) + 360) % 360;
-				delta = Math.min(z, Math.abs(360 - z));
-				if (delta < Game.MAXBACKDEG) {
-					this.health -= proj.damage;
+		if (!Game.player.menuON){
+			// Move this object to Game.player
+			double xChange = this.x - Game.player.x == 0 ? 1 : this.x - Game.player.x,
+					yChange = this.y - Game.player.y == 0 ? 1 : this.y - Game.player.y;
+			double totalDist = Math.sqrt(xChange * xChange + yChange * yChange);
+			this.velX = -xChange / noNaN(totalDist) * this.moveDist;
+			this.velY = -yChange / noNaN(totalDist) * this.moveDist;
+	
+			// Collision Detection
+			ArrayList<GameObject> inCollisionWith = Game.gameController.isColliding(this);
+			for (GameObject obj : inCollisionWith)
+				if (obj.type == Game.TYPE_ENEMY) {
+					Enemy enemy = (Enemy) obj;
+					this.setKnockback(10, enemy.x, enemy.y);
 				}
-				Game.gameController.toRemove.add(obj);
-			}
-
-		// Clamp Move and then try to despawn
-		this.health = clamp(this.health, 0, this.maxHealth);
-		move();
-		tryDespawn();
+			inCollisionWith = Game.gameController.isCollidingSprite(this);
+			//double a = this.rotateDegs - Game.MAXBACKDEG;
+			//double b = this.rotateDegs + Game.MAXBACKDEG;
+			for (GameObject obj : inCollisionWith)
+				if (obj.type == Game.TYPE_FRIENDLYPROJECTILE) {
+					Projectile proj = (Projectile) obj;
+					double delta = proj.rotateDegs - this.rotateDegs;
+					double z = ((Math.abs(delta) % 360) + 360) % 360;
+					delta = Math.min(z, Math.abs(360 - z));
+					if (delta < Game.MAXBACKDEG) {
+						this.health -= proj.damage;
+					}
+					Game.gameController.toRemove.add(obj);
+				}
+	
+			// Clamp Move and then try to despawn
+			this.health = clamp(this.health, 0, this.maxHealth);
+			move();
+			tryDespawn();
+		}
 	}
 
 	@Override
 	public void render(Graphics g) {
-		// Rotating enemy towards player
-		this.p1x = this.x + this.sprite[0].getWidth() / 2;
-		this.p1y = this.y + this.sprite[0].getHeight() / 2;
-		this.p2x = Game.player.x + this.sprite[0].getWidth() / 2;
-		this.p2y = Game.player.y + this.sprite[0].getHeight() / 2;
-		this.p3x = this.x + this.sprite[0].getWidth() / 2;
-		this.p3y = -1;
-		double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
-		double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
-		double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
-		// Making rotation move slowly
-		double oldRotate = this.rotateDegs;
+		if (Game.player.alive){
+			if (!Game.player.menuON){
+				// Rotating enemy towards player
+				this.p1x = this.x + this.sprite[0].getWidth() / 2;
+				this.p1y = this.y + this.sprite[0].getHeight() / 2;
+				this.p2x = Game.player.x + this.sprite[0].getWidth() / 2;
+				this.p2y = Game.player.y + this.sprite[0].getHeight() / 2;
+				this.p3x = this.x + this.sprite[0].getWidth() / 2;
+				this.p3y = -1;
+				double p12 = Math.sqrt((p1x - p2x) * (p1x - p2x) + (p1y - p2y) * (p1y - p2y));
+				double p23 = Math.sqrt((p2x - p3x) * (p2x - p3x) + (p2y - p3y) * (p2y - p3y));
+				double p31 = Math.sqrt((p3x - p1x) * (p3x - p1x) + (p3y - p1y) * (p3y - p1y));
+				// Making rotation move slowly
+				double oldRotate = this.rotateDegs;
+				
+				this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
+						+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
+				if (Math.abs(this.rotateDegs - oldRotate) <= 180){
+					if (this.rotateDegs > oldRotate){
+						this.rotateDegs = clamp(this.rotateDegs, oldRotate, oldRotate + rotSpeed);
+					}
+					else{
+						this.rotateDegs = clamp(this.rotateDegs, oldRotate - rotSpeed, oldRotate);
+					}
+				}
+				else{
+					if (this.rotateDegs > oldRotate){
+						this.rotateDegs = oldRotate - rotSpeed;
+						this.rotateDegs = this.rotateDegs < 0 ? this.rotateDegs + 360 : this.rotateDegs;
+					}
+					else{
+						this.rotateDegs = oldRotate + rotSpeed;
+						this.rotateDegs = this.rotateDegs > 360 ? this.rotateDegs - 360 : this.rotateDegs;
+					}
+				}
+				
+				g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y),
+						null);
+				
 		
-		this.rotateDegs = Math.abs(((p2x < p1x) ? -360 : 0) // Possible NaN here
-				+ Math.toDegrees(Math.acos((p12 * p12 + p31 * p31 - p23 * p23) / (2 * p12 * p31))));
-		if (Math.abs(this.rotateDegs - oldRotate) <= 180){
-			if (this.rotateDegs > oldRotate){
-				this.rotateDegs = clamp(this.rotateDegs, oldRotate, oldRotate + rotSpeed);
-			}
-			else{
-				this.rotateDegs = clamp(this.rotateDegs, oldRotate - rotSpeed, oldRotate);
+				// Draw Healthbar Elements
+				g.setColor(Color.black);
+				g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
+				g.setColor(Color.green);
+				g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10,
+						(int) (this.health / (double) this.maxHealth * 32), 5);
+				g.setColor(Color.DARK_GRAY);
+				g.drawRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
 			}
 		}
-		else{
-			if (this.rotateDegs > oldRotate){
-				this.rotateDegs = oldRotate - rotSpeed;
-				this.rotateDegs = this.rotateDegs < 0 ? this.rotateDegs + 360 : this.rotateDegs;
-			}
-			else{
-				this.rotateDegs = oldRotate + rotSpeed;
-				this.rotateDegs = this.rotateDegs > 360 ? this.rotateDegs - 360 : this.rotateDegs;
-			}
-		}
-		
-		g.drawImage(this.sprite[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y),
-				null);
-		
-
-		// Draw Healthbar Elements
-		g.setColor(Color.black);
-		g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
-		g.setColor(Color.green);
-		g.fillRect((int) Math.round(this.x), (int) Math.round(this.y) - 10,
-				(int) (this.health / (double) this.maxHealth * 32), 5);
-		g.setColor(Color.DARK_GRAY);
-		g.drawRect((int) Math.round(this.x), (int) Math.round(this.y) - 10, 32, 5);
 	}
 
 	@Override

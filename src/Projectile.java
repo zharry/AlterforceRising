@@ -50,7 +50,9 @@ public class Projectile extends GameObject {
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(Game.sprProjectile1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y), null);
+		if (!Game.player.menuON){
+			g.drawImage(Game.sprProjectile1[(int) Math.round(this.rotateDegs)], (int) Math.round(this.x), (int) Math.round(this.y), null);
+		}
 	}
 
 	@Override
