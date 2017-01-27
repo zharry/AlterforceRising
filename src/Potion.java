@@ -20,7 +20,7 @@ public class Potion extends GameObject {
 			this.sprite = Game.sprHealthPot;
 			this.colBox = new Rectangle(0, 0, 32, 32);
 		} else if (subtype == Game.POTION_SPEED) {
-			this.sprite = Game.sprSpeedPot;
+			this.sprite = Game.sprSpeedPot; 
 			this.colBox = new Rectangle(0, 0, 32, 32);
 		} else if (subtype == Game.POTION_DAMAGE) {
 			this.sprite = Game.sprDamagePot;

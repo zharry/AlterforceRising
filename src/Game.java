@@ -69,6 +69,8 @@ public class Game {
 	static BufferedImage sprExpIcon;
 
 	static BufferedImage sprBackground1, sprBackground2, sprBackground3;
+	
+	static BufferedImage sprHUD;
 
 	public static void main(String[] args) throws Exception {
 
@@ -104,6 +106,8 @@ public class Game {
 		sprBackground1 = ImageIO.read(new File(assetsDir + "Backgrounds/Background1.png"));
 		sprBackground2 = ImageIO.read(new File(assetsDir + "Backgrounds/Background2.png"));
 		sprBackground3 = ImageIO.read(new File(assetsDir + "Backgrounds/Background3.png"));
+		
+		sprHUD = ImageIO.read(new File(assetsDir + "HUD.png"));
 
 		// Create Sprite Rotations
 		AffineTransformOp op;

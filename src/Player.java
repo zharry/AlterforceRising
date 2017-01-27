@@ -59,6 +59,8 @@ public class Player extends GameObject {
 
 	@Override
 	public void tick() {
+		this.sPotionON = true;
+		this.dPotionON = true;
 		reduceCooldowns();
 		this.health += this.healthRegen / Game.tps;
 
@@ -215,33 +217,36 @@ public class Player extends GameObject {
 				}
 
 				// Draw HUD Elements
+				g.drawImage(Game.sprHUD, 20, Game.panelHeight - 80, null);
 				// Healthbar
 				g.setColor(Color.red);
-				g.fillRect(20, Game.panelHeight - 40, 100, 20);
+				int healthX = 103, healthY = Game.panelHeight - 75, healthHeight = 12, healthWidth = 84;
+				g.fillRect(healthX, healthY, healthWidth, healthHeight);
 				g.setColor(Color.green);
-				g.fillRect(20, Game.panelHeight - 40, (int) (this.health / (double) this.maxHealth * 100), 20);
+				g.fillRect(healthX, healthY, (int) (this.health / (double) this.maxHealth * healthWidth), healthHeight);
 				g.setColor(Color.DARK_GRAY);
-				g.drawRect(20, Game.panelHeight - 40, 100, 20);
+				g.drawRect(healthX, healthY, healthWidth, healthHeight);
 				g.setColor(Color.black);
-				g.drawString("Health: " + Math.round(this.health * 100) / 100.0 + "/"
-						+ Math.round(this.maxHealth * 100) / 100.0, 20, Game.panelHeight - 45);
+				//g.drawString("Health: " + Math.round(this.health * 100) / 100.0 + "/"
+				//		+ Math.round(this.maxHealth * 100) / 100.0, 20, Game.panelHeight - 45);
 				g.drawString("Health Regen: " + Math.round(this.healthRegen * 100) / 100.0, 20, Game.panelHeight - 58);
 
 				// PF Cooldown Indicator
 				g.setColor(Color.white);
-				g.fillRect(150, Game.panelHeight - 55, 35, 35);
-				g.drawImage(Game.sprPFIcon, 150, Game.panelHeight - 55, null);
+				int pfLocXD = 236, pfLocYD = Game.panelHeight - 66;
+				g.fillRect(pfLocXD, pfLocYD, 35, 35);
+				g.drawImage(Game.sprPFIcon, pfLocXD, pfLocYD, null);
 				g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-				g.fillRect(150, Game.panelHeight - 55, 35,
+				g.fillRect(pfLocXD, pfLocYD, 35,
 						(int) (this.pfCooldownTimer / (double) this.pfCooldownAmount * 35));
 				g.setColor(Color.black);
-				g.drawRect(150, Game.panelHeight - 55, 35, 35);
+				g.drawRect(pfLocXD, pfLocYD, 35, 35);
 				if (this.pfCooldownTimer > 0) {
 					Font orig = g.getFont();
 					g.setColor(Color.black);
 					g.setFont(new Font("default", Font.BOLD, 14));
-					g.drawString(Math.round((this.pfCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 159,
-							Game.panelHeight - 33);
+					g.drawString(Math.round((this.pfCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 244,
+							Game.panelHeight - 44);
 					g.setFont(orig);
 				}
 
@@ -289,19 +294,20 @@ public class Player extends GameObject {
 
 				// TP Cooldown Indicator
 				g.setColor(Color.cyan);
-				g.fillRect(200, Game.panelHeight - 55, 35, 35);
-				g.drawImage(Game.sprTPIcon, 200, Game.panelHeight - 55, null);
+				int tpLocXD = 280, tpLocYD = Game.panelHeight - 66;
+				g.fillRect(tpLocXD, tpLocYD, 35, 35);
+				g.drawImage(Game.sprTPIcon, tpLocXD, tpLocYD, null);
 				g.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 215));
-				g.fillRect(200, Game.panelHeight - 55, 35,
+				g.fillRect(tpLocXD, tpLocYD, 35,
 						(int) (this.tpCooldownTimer / (double) this.tpCooldownAmount * 35));
 				g.setColor(Color.black);
-				g.drawRect(200, Game.panelHeight - 55, 35, 35);
+				g.drawRect(tpLocXD, tpLocYD, 35, 35);
 				if (this.tpCooldownTimer > 0) {
 					Font orig = g.getFont();
 					g.setColor(Color.black);
 					g.setFont(new Font("default", Font.BOLD, 14));
-					g.drawString(Math.round((this.tpCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 200 + 9,
-							Game.panelHeight - 33);
+					g.drawString(Math.round((this.tpCooldownTimer / (double) Game.tps) * 10) / 10.0 + "", 288,
+							Game.panelHeight - 44);
 					g.setFont(orig);
 				}
 				// TP Location Indicator
@@ -350,8 +356,6 @@ public class Player extends GameObject {
 				g.drawString("Use right-click to teleport. Teleport deals damage to enemies it passes through.", 50,
 						110);
 				g.drawString("Pick up potions for boosts in health, damage, speed, and experience.", 50, 140);
-				g.drawImage(Game.sprDPIcon, 110, 145, null);
-				g.drawImage(Game.sprSPIcon, 170, 145, null);
 				g.drawString("Your player has levels. Defeat enemies to earn experience!", 50, Game.panelHeight - 250);
 				g.drawString(
 						"Every time you level up, you get experience points you can use to upgrade your health, speed and damage.",

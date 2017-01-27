@@ -13,7 +13,7 @@ public class Handler {
 	double bossNum = 1;
 
 	public void tick() {
-		if (Game.player.level <= 3) {
+		/*if (Game.player.level <= 3) {
 			if (Game.random.nextInt(150) == 1) {
 				this.add(new Enemy(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight),
 						Game.TYPE_ENEMY, Game.ENEMY_DEFAULT));
@@ -229,7 +229,7 @@ public class Handler {
 				this.add(new Potion(Game.random.nextInt(Game.panelWidth), Game.random.nextInt(Game.panelHeight),
 						Game.TYPE_POTION, Game.POTION_DAMAGE));
 			}
-		}
+		}*/
 		try {
 			for (GameObject object : gameObjects)
 				object.tick();
